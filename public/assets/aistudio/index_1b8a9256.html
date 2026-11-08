@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vaultly</title>
+<style>
+:root{--bg:#eceef5;--bgc:#eceef5;--sf:#fff;--sf2:#f3f4fa;--tx:#10121c;--mut:#6a7085;--acc:#5b4bff;--on:#fff;--bd:rgba(16,18,28,.08);--dg:#e5484d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c0e18;--bgc:#0c0e18;--sf:#161a2a;--sf2:#1f2438;--tx:#eef0fa;--mut:#8d94ad;--acc:#9a8dff;--on:#16113a;--bd:rgba(255,255,255,.08);--dg:#ff6b72}}
+:root[data-theme="dark"]{--bg:#0c0e18;--bgc:#0c0e18;--sf:#161a2a;--sf2:#1f2438;--tx:#eef0fa;--mut:#8d94ad;--acc:#9a8dff;--on:#16113a;--bd:rgba(255,255,255,.08);--dg:#ff6b72}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100vh;background:var(--bg) fixed;color:var(--tx);font:16px/1.45 "Google Sans",Roboto,system-ui,-apple-system,"Segoe UI",sans-serif}
+#app{max-width:560px;margin:0 auto;padding:18px 18px 110px}
+h1{font-size:30px;font-weight:700;letter-spacing:-.025em;margin:0;line-height:1.1}h1.m{font-size:22px}
+h2{font-size:14px;font-weight:600;margin:26px 4px 8px;color:var(--mut)}
+p.sub{margin:4px 0 0;color:var(--mut);font-size:14px}
+svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.row{display:flex;align-items:center;gap:8px}.sp{justify-content:space-between}.grow{flex:1}
+button{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:inherit;font-weight:600;border:0;border-radius:99px;padding:13px 22px;background:var(--acc);color:var(--on);cursor:pointer;transition:transform .12s,opacity .12s}
+button:active{transform:scale(.97)}button.g{background:var(--sf2);color:var(--tx)}button.d{background:var(--dg);color:#fff}button.s{padding:9px 15px;font-size:14px}
+button.big{width:100%;padding:16px}.ib{width:44px;height:44px;padding:0;display:grid;place-items:center;border-radius:50%;background:var(--sf);color:var(--tx);box-shadow:0 1px 0 var(--bd)}
+input,select,textarea{font:inherit;width:100%;padding:14px 16px;border-radius:14px;border:2px solid transparent;background:var(--sf2);color:var(--tx)}
+input:focus,select:focus,textarea:focus{outline:0;border-color:var(--acc)}
+.sf input,.sf select,.sf textarea{background:var(--sf2)}
+label{display:block;font-size:13px;font-weight:500;color:var(--mut);margin:14px 4px 6px}label.c{display:flex;gap:12px;align-items:center;justify-content:space-between;color:var(--tx);font-size:16px;margin:16px 4px 0}
+.srch{margin-top:18px;background:var(--sf);box-shadow:0 1px 0 var(--bd)}
+.cc{--c:#445;position:relative;overflow:hidden;border-radius:22px;padding:16px 18px;margin:10px 0;color:#fff;display:flex;flex-direction:column;gap:8px;cursor:pointer;background:var(--c);background:linear-gradient(140deg,color-mix(in srgb,var(--c) 80%,#fff),var(--c) 45%,color-mix(in srgb,var(--c) 55%,#000));box-shadow:0 14px 26px -16px var(--c);transition:transform .15s}
+.cc::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 100% 0,rgba(255,255,255,.22),transparent 55%);pointer-events:none}
+.cc:active{transform:scale(.985)}.cc>*{position:relative}
+.cc .r{display:flex;justify-content:space-between;align-items:center;font-size:13px;opacity:.92}
+.cc .nm{font-size:17px;font-weight:650;letter-spacing:-.01em}
+.cc .num{font-size:19px;letter-spacing:.16em;font-variant-numeric:tabular-nums}
+.chip{display:block;width:34px;height:25px;border-radius:6px;background:linear-gradient(135deg,#f3dc9a,#c9a24d);box-shadow:inset 0 0 0 1px rgba(0,0,0,.18)}
+.cc.add{margin-left:22px;padding:13px 16px;gap:4px}.cc.add .chip{display:none}.cc.add .num{font-size:16px}
+.cc.hero{aspect-ratio:1.586;cursor:default;justify-content:space-between;padding:20px;margin:18px 0 6px}.cc.hero .num{font-size:22px}.cc.hero:active{transform:none}
+.fab{position:fixed;right:18px;bottom:calc(20px + env(safe-area-inset-bottom,0px));display:flex;gap:8px;align-items:center;padding:15px 22px;box-shadow:0 14px 26px -10px var(--acc);z-index:5}
+.card{background:var(--sf);border-radius:20px;padding:4px 18px;box-shadow:0 1px 0 var(--bd)}
+.kv{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:13px 0;border-bottom:1px solid var(--bd)}.kv:last-child{border:0}
+.kv span{color:var(--mut);font-size:13px}.kv code{font-size:17px;font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.ph{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.ph figure{margin:0;position:relative}.ph img{width:100%;aspect-ratio:3/2;object-fit:cover;border-radius:16px;display:block;background:var(--sf2)}
+.ph figcaption{font-size:13px;color:var(--mut);margin:4px 4px 0}.ph .x{position:absolute;top:8px;right:8px;padding:3px 10px;background:rgba(0,0,0,.6);color:#fff}
+.view{position:fixed;inset:0;background:rgba(0,0,0,.94);display:flex;align-items:center;justify-content:center;z-index:60}.view img{max-width:100%;max-height:100%}
+.toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--tx);color:var(--bgc);padding:11px 18px;border-radius:99px;font-size:14px;font-weight:500;z-index:70;max-width:90%;text-align:center}
+.opt{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:15px 0;border-bottom:1px solid var(--bd)}.opt:last-child{border:0}.opt small{display:block;color:var(--mut);font-size:13px;margin-top:2px}.opt select{width:auto;padding:10px 12px}
+input.sw{appearance:none;-webkit-appearance:none;flex:none;width:50px;height:30px;padding:0;border-radius:99px;background:var(--sf2);box-shadow:inset 0 0 0 1px var(--bd);position:relative;transition:background .18s}
+input.sw::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:var(--mut);transition:transform .18s,background .18s}
+input.sw:checked{background:var(--acc)}input.sw:checked::after{transform:translateX(20px);background:var(--on)}input.sw:disabled{opacity:.4}
+.bar{position:sticky;bottom:calc(10px + env(safe-area-inset-bottom,0px));margin-top:22px}
+.lock{margin-top:14vh;text-align:center}.lock p{color:var(--mut);margin:8px 0 22px}.lock input{text-align:center}
+.logo{width:76px;height:76px;margin:0 auto 20px;border-radius:26px;display:grid;place-items:center;color:var(--on);background:linear-gradient(140deg,var(--acc),color-mix(in srgb,var(--acc) 55%,#000))}.logo svg{width:34px;height:34px}
+.err{color:var(--dg);min-height:24px;font-size:14px;margin:6px 0}
+.empty{text-align:center;color:var(--mut);margin-top:56px}.empty b{display:block;color:var(--tx);font-size:18px;margin-bottom:4px}
+.seg{display:flex;background:var(--sf2);border-radius:99px;padding:4px;margin-top:14px}.seg button{flex:1;background:transparent;color:var(--mut);padding:9px}.seg button.on{background:var(--sf);color:var(--tx);box-shadow:0 1px 3px rgba(0,0,0,.14)}
+.view.sh{background:rgba(0,0,0,.55);align-items:flex-end}.sheet{background:var(--shc,var(--sf));color:var(--tx);width:100%;max-width:560px;border-radius:26px 26px 0 0;padding:22px 20px calc(22px + env(safe-area-inset-bottom,0px))}
+.cc.pic{background-size:cover;background-position:center;aspect-ratio:1.586;justify-content:flex-end;padding:0!important;gap:0}.cc.pic::before{display:none}
+.strip{display:flex;justify-content:space-between;align-items:flex-end;gap:8px;padding:30px 14px 12px;background:linear-gradient(to top,rgba(0,0,0,.8),transparent);font-size:12px}.strip .nm{font-size:15px}.strip span{opacity:.92}
+.nv{font-size:13px}.nv b{font-weight:700;font-style:italic;letter-spacing:.02em}
+input.pin{font-size:28px;letter-spacing:.4em;text-indent:.4em}
+.ctl{height:52px;padding:0 16px!important;white-space:nowrap;min-width:0}
+.zx{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));right:14px;background:rgba(255,255,255,.18);color:#fff}
+.stack{margin:8px 0 16px}.stack .cc{height:156px;margin:-92px 0 0;justify-content:space-between;box-shadow:0 -8px 16px -10px rgba(0,0,0,.5),0 14px 26px -16px var(--c)}.stack .cc:first-child{margin-top:0}
+h2 .cnt{font-weight:500;opacity:.7;margin-left:6px}
+.note{margin-top:14px;padding:12px 14px;border-radius:16px;font-size:14px;background:color-mix(in srgb,var(--dg) 12%,var(--sf))}
+.chips{display:flex;gap:8px;margin-top:12px}.chips button{padding:8px 16px;font-size:14px;background:var(--sf);color:var(--mut);box-shadow:0 1px 0 var(--bd)}.chips button.on{background:var(--tx);color:var(--bgc)}
+.ph img{aspect-ratio:1.586}
+.tabs{display:flex;gap:8px;overflow-x:auto;margin-top:16px;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:none;padding:9px 18px;font-size:14px;background:var(--sf);color:var(--mut);box-shadow:0 1px 0 var(--bd)}.tabs button.on{background:var(--acc);color:var(--on)}
+.li{display:flex;align-items:center;gap:14px;padding:14px 16px;border-bottom:1px solid var(--bd);cursor:pointer}.li:last-child{border:0}.li b{display:block}.li small{color:var(--mut)}
+.av{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#fff;font-weight:700;font-size:18px;flex:none}
+.pal{display:flex;flex-wrap:wrap;gap:10px;margin:2px 4px 0}
+.swc{width:38px;height:38px;border-radius:50%;padding:0!important;margin:0;border:2px solid transparent;color:#fff;font-size:11px;display:grid;place-items:center;position:relative}
+.swc.sel{border-color:var(--tx);box-shadow:inset 0 0 0 2px var(--bgc)}.swc.auto{background:var(--sf2);color:var(--tx)}.swc.pick{cursor:pointer;color:var(--tx);font-size:18px}
+.swc.pick input{position:absolute;inset:0;opacity:0;width:100%;height:100%;padding:0}
+:root[data-theme="light"]{--shc:var(--sf)}
+:root[data-theme="black"]{--bg:#000;--bgc:#000;--sf:#0e0e10;--sf2:#1b1b1f;--tx:#f4f4f5;--mut:#8c8c94;--acc:#a99cff;--on:#16113a;--bd:rgba(255,255,255,.1);--dg:#ff6b72;--shc:#0e0e10}
+:root[data-theme="aurora"]{--bg:linear-gradient(160deg,#0f0c29 0%,#302b63 55%,#1b1b3a 100%);--bgc:#0f0c29;--sf:rgba(255,255,255,.09);--sf2:rgba(255,255,255,.13);--tx:#f5f3ff;--mut:rgba(245,243,255,.66);--acc:#c4b5fd;--on:#1e1450;--bd:rgba(255,255,255,.14);--dg:#ff8087;--shc:#272256}
+:root[data-theme="ocean"]{--bg:linear-gradient(160deg,#0b1f2a 0%,#12404a 55%,#0f5e63 100%);--bgc:#0b1f2a;--sf:rgba(255,255,255,.09);--sf2:rgba(255,255,255,.13);--tx:#effffd;--mut:rgba(239,255,253,.68);--acc:#5eead4;--on:#04302b;--bd:rgba(255,255,255,.14);--dg:#ff8087;--shc:#124650}
+:root[data-theme="sunset"]{--bg:linear-gradient(160deg,#ff7a59 0%,#e8457c 50%,#7b3fe4 100%);--bgc:#c2417a;--sf:rgba(255,255,255,.18);--sf2:rgba(255,255,255,.24);--tx:#fff;--mut:rgba(255,255,255,.78);--acc:#fff;--on:#8a1f50;--bd:rgba(255,255,255,.22);--dg:#7a1030;--shc:#8e2f80}
+:root[data-theme="candy"]{--bg:linear-gradient(135deg,#a8edea 0%,#fed6e3 55%,#d9c2ff 100%);--bgc:#fdf3fb;--sf:rgba(255,255,255,.72);--sf2:rgba(255,255,255,.92);--tx:#25203a;--mut:#6b6385;--acc:#7c3aed;--on:#fff;--bd:rgba(37,32,58,.1);--dg:#d6336c;--shc:#fff}
+[data-glass] .card,[data-glass] .ib,[data-glass] .srch,[data-glass] .tabs button,[data-glass] .chips button,[data-glass] .sheet{-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}
+.thm{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.th{height:64px;border-radius:16px;padding:0 0 7px!important;border:2px solid transparent;font-size:12px;font-weight:600;align-items:flex-end}
+.th.sel{border-color:var(--tx);box-shadow:inset 0 0 0 2px var(--bgc)}
+.combo{position:relative}.combo input{padding-right:54px}
+.cb{position:absolute;right:6px;top:6px;width:40px;height:40px;padding:0!important;background:transparent;color:var(--mut);border-radius:50%}
+.logo{background:none!important;width:132px;height:132px;border-radius:0!important;margin-bottom:12px}.logo img{width:132px;height:132px;display:block}
+.cc .r svg{width:26px;height:26px;opacity:.9}
+.idc{border-radius:20px;overflow:hidden;margin:10px 0;background:var(--sf);box-shadow:0 1px 0 var(--bd),0 14px 26px -20px rgba(0,0,0,.55);cursor:pointer;transition:transform .15s}.idc:active{transform:scale(.985)}
+.idc.hero{cursor:default;margin-top:18px}.idc.hero:active{transform:none}
+.idh{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 16px;color:#fff;font-weight:600}
+.idb{padding:14px 16px 16px;display:flex;gap:14px;align-items:center}.idc.hero .idb{padding:22px 18px}
+.idp{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:18px;flex:none}
+.idn b{display:block;font-size:17px;font-weight:650}.idn .num{font-size:16px;letter-spacing:.12em;font-variant-numeric:tabular-nums;color:var(--mut)}
+.chp{font-size:12px;font-weight:600;padding:4px 10px;border-radius:99px;background:rgba(255,255,255,.24)}.chp.bad{background:#ffe1e1;color:#7a0a0a}
+.srt{width:auto;padding:8px 14px;font-size:14px;border-radius:99px;margin-left:auto;background:var(--sf);box-shadow:0 1px 0 var(--bd)}
+.th.ico{height:auto;padding:10px 4px 8px!important;flex-direction:column;gap:6px;align-items:center;background:var(--sf2);color:var(--tx);text-shadow:none}
+.ico img{width:54px;height:54px;border-radius:15px;display:block}
+.note.tap{cursor:pointer}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+/* motion */
+#app{transition:opacity .18s ease,transform .18s ease}
+#app.vt{opacity:0;transform:translateX(16px)}
+@keyframes pop{from{transform:scale(.94);opacity:0}}
+.cc.hero{animation:pop .25s ease}
+@media(hover:hover){.stack .cc:hover{transform:translateY(-4px)}}
+/* card flip */
+.cc{transform-style:preserve-3d}
+.cc .face{backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.cc .face.back{position:absolute;inset:0;transform:rotateY(180deg);border-radius:inherit;background-size:cover;background-position:center;display:flex;align-items:flex-end;box-shadow:0 14px 26px -16px var(--c)}
+.cc .face.back span{padding:26px 14px 12px;width:100%;font-size:12px;opacity:.92;background:linear-gradient(to top,rgba(0,0,0,.75),transparent)}
+.cc.flipped{transform:rotateY(180deg)!important}
+.cc .opn{position:absolute;top:10px;right:10px;width:32px;height:32px;padding:0;background:rgba(0,0,0,.4);color:#fff;z-index:3}
+.cc .opn svg{width:16px;height:16px}
+/* progress bars */
+.mtr{height:8px;border-radius:99px;background:var(--sf2);overflow:hidden;margin:8px 0 2px}
+.mtr i{display:block;height:100%;border-radius:99px;background:var(--acc);transition:width .3s}
+.mtr.warn i{background:#e8a13c}.mtr.bad i{background:var(--dg)}
+.lrow{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--bd)}.lrow:last-child{border:0}
+.lrow .grow{flex:1;min-width:0}.lrow small{color:var(--mut);display:block}
+.chp{display:inline-block;padding:3px 10px;border-radius:99px;font-size:12px;background:var(--sf2);color:var(--mut)}
+.dots{display:flex;gap:14px;justify-content:center;margin:10px 0 2px}.dots i{width:14px;height:14px;border-radius:50%;border:2px solid var(--mut)}.dots i.f{background:var(--acc);border-color:var(--acc)}
+.kp{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:300px;margin:8px auto 0}.kp button{height:62px;border-radius:50%;background:var(--sf);color:var(--tx);font-size:26px;font-weight:500;padding:0;box-shadow:0 1px 0 var(--bd)}.kp button.kx{background:transparent;box-shadow:none}.kp button:disabled{opacity:0}
+.lock.pinm{margin-top:3vh}.lock.pinm .logo{width:92px;height:92px;margin-bottom:0}.lock.pinm .logo img{width:92px;height:92px}.lock.pinm p{margin:4px 0 6px}
+.qp{width:100%;max-width:420px;padding:20px}.cc[data-cid]{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+</style></head><body><div id="app"></div><div id="cover" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:50"></div><script src="native.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const IC={search:'<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>',fp:'<svg viewBox="0 0 24 24"><path d="M12 3a7 7 0 00-7 7v3M12 7a3 3 0 00-3 3v4a8 8 0 002 5M12 11v4a12 12 0 001.5 5.5M16 10a4 4 0 00-4-4M19 12v1a14 14 0 01-1.3 5"/></svg>',bank:'<svg viewBox="0 0 24 24"><path d="M3 10l9-6 9 6M5.5 10v8M10 10v8M14 10v8M18.5 10v8M3 20.5h18"/></svg>',share:'<svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="2.2"/><circle cx="18" cy="6" r="2.2"/><circle cx="18" cy="18" r="2.2"/><path d="M8 11l8-4M8 13l8 4"/></svg>',brand:'<svg viewBox="0 0 108 108" style="stroke:none;fill:none"><defs><linearGradient id="gV" x1="24" y1="0" x2="84" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#27E6FF"/><stop offset=".5" stop-color="#2F80FF"/><stop offset="1" stop-color="#8B5CF6"/></linearGradient><linearGradient id="gL" x1="0" y1="64" x2="0" y2="83" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#C7D4FF"/></linearGradient><linearGradient id="gBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2557FF"/><stop offset="1" stop-color="#050B3D"/></linearGradient><radialGradient id="gGlow" cx=".3" cy=".22" r=".75"><stop offset="0" stop-color="#fff" stop-opacity=".24"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs><rect width="108" height="108" rx="24" fill="url(#gBg)"/><rect width="108" height="108" rx="24" fill="url(#gGlow)"/><g transform="translate(54 54) scale(1.0) translate(-54 -59)"><path d="M24 28 L42 28 L54 62 L66 28 L84 28 L54 90 Z" fill="url(#gV)" stroke="url(#gV)" stroke-width="6" stroke-linejoin="round"/><path d="M47.5 64 V58 a6.5 6.5 0 0 1 13 0 V64" fill="none" stroke="#071766" stroke-width="9.5" stroke-linecap="round"/><rect x="42" y="64" width="24" height="19" rx="5" fill="#071766" stroke="#071766" stroke-width="5" stroke-linejoin="round"/><path d="M47.5 64 V58 a6.5 6.5 0 0 1 13 0 V64" fill="none" stroke="#F4F7FF" stroke-width="4.5" stroke-linecap="round"/><rect x="42" y="64" width="24" height="19" rx="5" fill="url(#gL)"/><circle cx="54" cy="72" r="2.9" fill="#071766"/><path d="M52.5 73.5 L55.5 73.5 L56.4 79 L51.6 79 Z" fill="#071766"/></g></svg>',chev:'<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>',nfc:'<svg viewBox="0 0 24 24"><path d="M7 8.5a5 5 0 010 7M11 6a9 9 0 010 12M15 3.5a13 13 0 010 17"/></svg>',open:'<svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg>',chart:'<svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-8M21 20H3"/></svg>',prof:'<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 20a7.5 7.5 0 0115 0"/></svg>',x:'<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>',set:'<svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>',lock:'<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2.5"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>',plus:'<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',back:'<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>',cam:'<svg viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>'};
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const enc=new TextEncoder(),dec=new TextDecoder();
+const b64=u=>{let s='';for(let i=0;i<u.length;i+=32768)s+=String.fromCharCode.apply(null,u.subarray(i,i+32768));return btoa(s)};
+const unb64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+function idb(){return new Promise((res,rej)=>{const r=indexedDB.open('cardvault',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+async function dbGet(k){const d=await idb();return new Promise((res,rej)=>{const q=d.transaction('kv').objectStore('kv').get(k);q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)})}
+async function dbSet(k,v){const d=await idb();return new Promise((res,rej)=>{const t=d.transaction('kv','readwrite');t.objectStore('kv').put(v,k);t.oncomplete=()=>res();t.onerror=()=>rej(t.error)})}
+async function derive(pw,salt){const m=await crypto.subtle.importKey('raw',enc.encode(pw),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:250000,hash:'SHA-256'},m,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
+async function persist(){const iv=crypto.getRandomValues(new Uint8Array(12));const ct=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv},S.key,enc.encode(JSON.stringify(S.vault))));await dbSet('vault',{salt:b64(S.salt),iv:b64(iv),ct:b64(ct)});setTimeout(syncRem,300);setTimeout(()=>autoBackup(false),2500)}
+async function unlock(pw){const r=await dbGet('vault');
+ if(!r){S.salt=crypto.getRandomValues(new Uint8Array(16));S.key=await derive(pw,S.salt);S.vault={cards:[],items:[]};await persist();return true}
+ const salt=unb64(r.salt),key=await derive(pw,salt);
+ try{const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(r.iv)},key,unb64(r.ct));S.vault=JSON.parse(dec.decode(pt));S.key=key;S.salt=salt;
+ if(S.vault.bin){const cut=Date.now()-30*864e5,nb=S.vault.bin.length;S.vault.bin=S.vault.bin.filter(x=>x.deletedAt>cut);if(nb!==S.vault.bin.length)persist()}S.vault.items=(S.vault.items||[]).map(i=>i.type==='upi'?Object.assign({},i,{type:'bank',bank:i.bank||i.app||'UPI',kind:'Savings'}):i);setTimeout(syncRem,800);setTimeout(()=>autoPull(true),1500);setTimeout(checkShared,1800);setTimeout(()=>autoBackup(false),2500);return true}catch(e){return false}}
+
+const DEF={lock:0,shots:false,bio:false,pin:false,pinLen:4,def:'pw',group:'bank',photo:true,rem:true,lead:2,theme:'auto',acc:'',sort:'name',isort:'name',shareCvv:false,lastBackup:0,fails:0,until:0,flags:{flip:true,util:true,fee:true,bills:true,insights:true,lounge:true},keypad:true,haptic:true,autoPull:true,bkDays:0,bkKeep:7,bkLast:0,bkErr:''};
+const CFG=(()=>{try{return Object.assign({},DEF,JSON.parse(localStorage.getItem('cv_cfg')||'{}'))}catch(e){return Object.assign({},DEF)}})();
+CFG.flags=Object.assign({},DEF.flags,CFG.flags||{});
+const saveCfg=()=>{try{localStorage.setItem('cv_cfg',JSON.stringify(CFG))}catch(e){}};
+const S={bioOK:false,key:null,vault:null,exists:false,view:'lock',id:null,q:'',rev:{},draft:null,del:false,picking:false,err:''};
+const BANKS={HDFC:'#1d4f91',ICICI:'#c2571a',Axis:'#8e1b4a',SBI:'#1c6fb8',Kotak:'#c4262e',IndusInd:'#8a1538','IDFC First':'#7a1f2b',Amex:'#2a7f9e'};
+const bankCol=b=>{if(BANKS[b])return BANKS[b];let h=0;for(const c of b||'?')h=(h*31+c.charCodeAt(0))%360;return`hsl(${h} 45% 36%)`};
+const fmtNum=n=>{n=(n||'').replace(/\D/g,'');return/^3[47]/.test(n)?n.replace(/^(.{4})(.{0,6})(.{0,5}).*/,'$1 $2 $3').trim():n.replace(/(.{4})/g,'$1 ').trim()};
+const last4=n=>(n||'').replace(/\D/g,'').slice(-4);
+const mask=n=>'•••• '+last4(n);
+const byId=id=>S.vault.cards.find(c=>c.id===id)||(S.vault.items||[]).find(c=>c.id===id);
+const uid=()=>Math.random().toString(36).slice(2,10);
+function toast(t){const e=document.createElement('div');e.className='toast';e.textContent=t;document.body.appendChild(e);setTimeout(()=>e.remove(),1800)}
+let clipT;async function copy(t,label){try{await navigator.clipboard.writeText(t);toast(label+' copied · clears in 45s');clearTimeout(clipT);clipT=setTimeout(()=>{navigator.clipboard.writeText('').catch(()=>{})},45000)}catch(e){toast('Copy not allowed here')}}
+const initMode=()=>{S.mode=(CFG.def==='pin'&&CFG.pin)?'pin':'pw'};
+const setMode=m=>{S.mode=m;S.err='';render()};
+function lock(force){if((S.picking&&!force)||!S.key)return;S.key=null;S.vault=null;S.rev={};S.draft=null;S.view='lock';S.err='';initMode();render();autoBio()}
+let hiddenAt=0,idleT;
+function cover(on){$('#cover').style.display=on?'block':'none'}
+function away(){if(!S.key||S.picking)return;if(CFG.lock===0)return lock();hiddenAt=Date.now();cover(true)}
+function back(){cover(false);if(S.key&&hiddenAt&&CFG.lock>0&&Date.now()-hiddenAt>=CFG.lock*1000)lock(true);hiddenAt=0;bump()}
+function bump(){clearTimeout(idleT);if(S.key&&CFG.lock>0)idleT=setTimeout(()=>lock(),CFG.lock*1000)}
+document.addEventListener('visibilitychange',()=>document.hidden?away():back());
+['pointerdown','keydown','scroll'].forEach(e=>addEventListener(e,bump,{passive:true}));
+if(window.CV)CV.onPause(away);
+const guard=async f=>{S.picking=true;try{return await f()}finally{S.picking=false}};
+function pickFile(id){S.picking=true;const i=$('#'+id);i.addEventListener('cancel',()=>{S.picking=false},{once:true});setTimeout(()=>{S.picking=false},120000);i.click()}
+function sheet(title,fields,ok){return new Promise(res=>{const o=document.createElement('div');o.className='view sh';
+ o.innerHTML=`<div class="sheet"><h1 class="m">${esc(title)}</h1>${fields.map(f=>{const t=f.opts?`<select id="sh_${f.id}">${f.opts.map(x=>`<option ${f.def===x?'selected':''}>${esc(x)}</option>`).join('')}</select>`:`<input id="sh_${f.id}" type="${f.txt?'text':f.date?'date':'password'}" value="${f.def&&!f.opts?esc(f.def):''}" ${f.num?'inputmode="numeric"':''} ${f.ph?`placeholder="${esc(f.ph)}"`:''} autocomplete="off">`;return`<label>${esc(f.l)}</label>${t}`}).join('')}<div class="row" style="margin-top:20px"><button class="g grow" id="sh_c">Cancel</button><button class="grow" id="sh_o">${esc(ok||'OK')}</button></div></div>`;
+ document.body.appendChild(o);const close=v=>{o.remove();res(v)};
+ o.querySelector('#sh_c').onclick=()=>close(null);
+ o.querySelector('#sh_o').onclick=()=>close(Object.fromEntries(fields.map(f=>[f.id,o.querySelector('#sh_'+f.id).value])));
+ o.querySelector('input').focus()})}
+const checkPw=async pw=>{const r=await dbGet('vault');await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(r.iv)},await derive(pw,unb64(r.salt)),unb64(r.ct))};
+async function autoBio(){if(S.view==='lock'&&S.exists&&CFG.bio&&S.bioOK&&CFG.def==='bio'&&!S.bioBusy)bioGo()}
+async function bioGo(){S.bioBusy=true;S.picking=true;
+ try{const pw=await CV.bioUnlock();if(pw&&await unlock(pw)){S.view='list';S.err='';bump()}else S.err='Biometric unlock failed. Use your password.'}
+ catch(e){if(/invalidated/i.test(String((e&&e.message)||e))){CFG.bio=false;if(CFG.def==='bio')CFG.def='pw';saveCfg();S.err='Your fingerprints changed, so biometric unlock was turned off for safety. Sign in with your password and turn it on again.'}}
+ S.bioBusy=false;S.picking=false;render()}
+async function killPin(){for(const k of['pin_blob','pin_fail'])try{await CV.delSecret(k)}catch(e){}CFG.pin=false;if(CFG.def==='pin')CFG.def='pw';saveCfg()}
+function pinIn(el){el.value=el.value.replace(/\D/g,'');if(el.value.length>=CFG.pinLen)pinGo()}
+async function pinGo(){const v=S.pinv||($('#pin')||{}).value||'';if(v.length<CFG.pinLen||S.pinBusy)return;S.pinBusy=true;S.err='';
+ try{const r=JSON.parse(await CV.getSecret('pin_blob'));const pw=dec.decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(r.iv)},await derive(v,unb64(r.salt)),unb64(r.ct)));
+  if(await unlock(pw)){try{await CV.saveSecret('pin_fail','0')}catch(e){}S.pinv='';S.pinBusy=false;S.view='list';bump();return render()}}catch(e){}
+ let n=0;try{n=+(await CV.getSecret('pin_fail'))||0}catch(e){}n++;
+ if(n>=5){await killPin();S.mode='pw';S.err='Too many wrong PINs. PIN turned off, use your password.'}
+ else{try{await CV.saveSecret('pin_fail',String(n))}catch(e){}S.err='Wrong PIN. '+(5-n)+(5-n===1?' try':' tries')+' left.'}
+ vib(60);S.pinv='';S.pinBusy=false;render()}
+function vib(ms){if(CFG.haptic!==false&&navigator.vibrate)try{navigator.vibrate(ms||10)}catch(e){}}
+const dotsH=()=>Array.from({length:CFG.pinLen},(_,i)=>`<i class="${i<(S.pinv||'').length?'f':''}"></i>`).join('');
+function kp(d){if(S.pinBusy)return;vib();S.pinv=(S.pinv||'')+d;const e=$('#dots');if(e)e.innerHTML=dotsH();if(S.pinv.length>=CFG.pinLen)pinGo()}
+function kb(){vib();S.pinv=(S.pinv||'').slice(0,-1);const e=$('#dots');if(e)e.innerHTML=dotsH()}
+function render(){const a=$('#app');
+ if(S.view==='lock')a.innerHTML=lockV();else if(S.view==='list')a.innerHTML=listV();else if(S.view==='set')a.innerHTML=S.setSub==='bin'?binV():S.setSub==='appear'?appearV():setV();else if(S.view==='detail')a.innerHTML=detailV();else if(S.view==='in')a.innerHTML=insV();else if(S.view==='gs')a.innerHTML=gsV();else a.innerHTML=editV();
+ a.classList.add('vt');requestAnimationFrame(()=>requestAnimationFrame(()=>a.classList.remove('vt')));
+ const f=a.querySelector('[autofocus]');if(f)f.focus()}
+function lockV(){const pinM=S.exists&&S.mode==='pin'&&CFG.pin,pad=pinM&&CFG.keypad!==false,bioK=CFG.bio&&S.bioOK;
+ const alt=S.exists?(pinM?`<button class="big g" style="margin-top:14px" onclick="setMode('pw')">Use password</button>`:(CFG.pin?`<button class="big g" style="margin-top:10px" onclick="setMode('pin')">Use PIN</button>`:''))+(!pad&&bioK?`<button class="big g" style="margin-top:10px" onclick="bioGo()">Use fingerprint or face</button>`:''):'';
+ const pin=pad?`<div class="dots" id="dots">${dotsH()}</div><div class="err">${esc(S.err)}</div><div class="kp">${[1,2,3,4,5,6,7,8,9].map(n=>`<button onclick="kp('${n}')">${n}</button>`).join('')}<button class="kx" ${bioK?'onclick="bioGo()" aria-label="Use fingerprint"':'disabled'}>${bioK?IC.fp:''}</button><button onclick="kp('0')">0</button><button class="kx" aria-label="Delete" onclick="kb()">⌫</button></div>`
+  :`<input id="pin" class="pin" type="password" inputmode="numeric" maxlength="${CFG.pinLen}" placeholder="${'•'.repeat(CFG.pinLen)}" autofocus autocomplete="off" oninput="pinIn(this)"><div class="err">${esc(S.err)}</div>`;
+ return`<div class="lock ${pad?'pinm':''}"><div class="logo"><img src="hero.webp" alt="Vaultly" width="132" height="132"></div><h1>Vaultly</h1><p>${pinM?'Enter your PIN.':S.exists?'Enter your master password to unlock.':'Create a master password. It encrypts everything on this device and can’t be recovered if you forget it.'}</p>
+${pinM?pin:`<input id="pw" type="password" placeholder="Master password" autofocus autocomplete="off" onkeydown="if(event.key==='Enter')go()">${S.exists?'':'<input id="pw2" type="password" placeholder="Confirm password" style="margin-top:10px" onkeydown="if(event.key===\'Enter\')go()">'}<div class="err">${esc(S.err)}</div><button class="big" onclick="go()">${S.exists?'Unlock':'Create vault'}</button>`}${alt}</div>`}
+function waitLeft(){return Math.max(0,Math.ceil(((CFG.until||0)-Date.now())/1000))}
+function failMsg(){CFG.fails=(CFG.fails||0)+1;if(CFG.fails>=5)CFG.until=Date.now()+Math.min(900,30*Math.pow(2,CFG.fails-5))*1000;saveCfg();return waitLeft()?'Wrong password. Wait '+waitLeft()+' seconds before trying again.':'Wrong password.'}
+async function go(){const p=$('#pw').value;if(S.exists&&waitLeft()){S.err='Too many wrong tries. Wait '+waitLeft()+' seconds.';return render()}if(!S.exists){if(p.length<8){S.err='Use at least 8 characters.';return render()}if(p!==$('#pw2').value){S.err='Passwords don’t match.';return render()}}
+ S.err='Working…';render();
+ try{if(await unlock(p)){S.exists=true;S.view='list';S.err='';CFG.fails=0;CFG.until=0;saveCfg();bump()}else S.err=failMsg()}catch(e){S.err='Storage unavailable in this browser.'}render()}
+
+const netOf=c=>c.network||brand(c.number)||'';
+function cardEl(c,cls,click,full){const net=netOf(c),num=full?fmtNum(c.number):mask(c.number);
+ const nv=(net?`<b>${esc(net)}</b>`:'')+(c.variant?' '+esc(c.variant):'');
+ const back=(c.photos||[]).find(p=>p.label==='Back'),flip=(click===2||(click&&back&&CFG.flags.flip));
+ const oc=flip?`onclick="flipCard(event)"`:(click?`onclick="open_('${c.id}')"`:'');
+ const op=(click===1&&flip)?`<button class="opn" aria-label="Open card" onclick="event.stopPropagation();open_('${c.id}')">${IC.open}</button>`:'';
+ const col=c.color||bankCol(c.bank);let sty=`--c:${col}`;
+ if(c.bg&&c.bg.t==='pic'&&c.bg.v)sty+=`;background-image:${PATS.dots},url('${c.bg.v}');background-size:auto,cover;background-color:${col}`;
+ else if(c.bg&&c.bg.t==='pat'&&PATS[c.bg.v])sty+=`;background-image:${PATS[c.bg.v]},linear-gradient(140deg,color-mix(in srgb,${col} 80%,#fff),${col} 45%,color-mix(in srgb,${col} 55%,#000))`;
+ return`<div class="cc ${cls}" data-cid="${c.id}" style="${sty}" ${oc}><div class="face front"><div class="r"><span class="nm">${c.blocked?'⛔ ':''}${c.fav?'★ ':''}${esc(c.name||c.bank)}</span><span class="nv">${nv}</span></div><div class="r"><i class="chip"></i><span>${c.parent?'Add-on · ':''}${esc(c.kind)}${c.virtual?' · virtual':''}</span></div><div class="num">${esc(num)}</div><div class="r"><span>${esc(c.holder)||'&nbsp;'}</span><span>${esc(c.expiry)}</span></div></div>${flip&&back?`<div class="face back" style="background-image:url('${back.data}')"><span>${esc(c.bank)} ${esc(c.name||'')} · back</span></div>`:''}${op}</div>`}
+function flipCard(e){e.stopPropagation();e.currentTarget.classList.toggle('flipped');if(navigator.vibrate)try{navigator.vibrate(8)}catch(_){}}
+const PATS={lines:'repeating-linear-gradient(45deg,rgba(255,255,255,.10) 0 2px,transparent 2px 14px)',dots:'radial-gradient(rgba(255,255,255,.16) 1.2px,transparent 1.4px)',grid:'repeating-linear-gradient(0deg,rgba(255,255,255,.08) 0 1px,transparent 1px 18px),repeating-linear-gradient(90deg,rgba(255,255,255,.08) 0 1px,transparent 1px 18px)',waves:'repeating-radial-gradient(circle at 100% 0,rgba(255,255,255,.10) 0 8px,transparent 8px 26px)'};
+const setBgPat=v=>{S.draft.bg=v?{t:'pat',v}:null;render()};
+async function setBgPhoto(inp){const f=inp.files[0];inp.value='';if(!f)return;try{S.draft.bg={t:'pic',v:await shrink(f,1200)};render()}catch(e){toast('Couldn’t read that image')}}
+const tile=(c,add)=>cardEl(c,add?'add':'',1,0);
+const setGroup=g=>{CFG.group=g;saveCfg();render()};
+const setSort=v=>{CFG.sort=v;saveCfg();render()};
+const expDate=c=>{const m=/^(\d\d)\/(\d\d)$/.exec(c.expiry||'');return m?new Date(2000+ +m[2],+m[1],0,23,59):null};
+const SORTS={name:(a,b)=>String(a.name||a.bank||'').localeCompare(String(b.name||b.bank||'')),nameDesc:(a,b)=>String(b.name||b.bank||'').localeCompare(String(a.name||a.bank||'')),expiry:(a,b)=>{const x=expDate(a),y=expDate(b);return(x?+x:9e15)-(y?+y:9e15)},added:(a,b)=>(b.created||0)-(a.created||0),limit:(a,b)=>(+b.limit||0)-(+a.limit||0)};
+const SORTL=[['name','Name (A–Z)'],['nameDesc','Name (Z–A)'],['expiry','Soonest expiry'],['added','Recently added'],['limit','Highest limit']];
+function noteH(){return pendNote()+noteH0()}
+function noteH0(){const n=S.vault.cards.length+(S.vault.items||[]).length;if(!n)return'';
+ if(CFG.bkDays>0&&CFG.bkErr)return`<div class="note tap" onclick="S.view='set';render()">${CFG.bkErr} Tap to fix it.</div>`;
+ if(CFG.bkDays>0)return'';
+ if(CFG.autoBk&&CFG.lastBackup&&Date.now()-CFG.lastBackup>7*864e5)return`<div class="note tap" onclick="S.view='set';render()">Your last backup is over a week old. Tap to export a new one.</div>`;
+ if(CFG.autoBk&&!CFG.lastBackup)return`<div class="note tap" onclick="S.view='set';render()">You haven’t made a backup yet. Tap to export one now.</div>`;
+ if(CFG.lastBackup&&Date.now()-CFG.lastBackup<30*864e5)return'';
+ return`<div class="note tap" onclick="S.view='set';render()">${CFG.lastBackup?'It’s been over a month since your last backup.':'You haven’t made a backup yet.'} Tap to open Settings and export one.</div>`}
+function cardsBody(){const q=S.q.toLowerCase(),all=S.vault.cards.filter(c=>!CFG.profile||c.pid===CFG.profile),mode=CFG.group||'bank',fk=S.fk||'All';
+ const hit=c=>(fk==='All'||c.kind===fk)&&(!q||[c.bank,c.name,c.holder,c.variant,netOf(c),last4(c.number)].join(' ').toLowerCase().includes(q));
+ const gk=c=>mode==='network'?(netOf(c)||'Other'):mode==='all'?'':(c.bank||'Other');
+ const cmp=SORTS[CFG.sort]||SORTS.name;
+ const prim=all.filter(c=>!c.parent||!all.some(x=>x.id===c.parent)).sort((a,b)=>(!!b.fav-!!a.fav)||cmp(a,b));const groups={};
+ prim.forEach(p=>{const kids=all.filter(k=>k.parent===p.id);if(hit(p)||kids.some(hit))(groups[gk(p)]=groups[gk(p)]||[]).push(p,...kids)});
+ const ord=['Visa','Mastercard','RuPay','Amex'],rk=k=>{const i=ord.indexOf(k);return i<0?99:i};
+ const keys=Object.keys(groups).sort((a,b)=>CFG.sort==='nameDesc'?b.localeCompare(a):CFG.sort==='name'?a.localeCompare(b):mode==='network'?(rk(a)-rk(b)||a.localeCompare(b)):a.localeCompare(b));
+ const body=keys.map(b=>(b?`<h2>${esc(b)}<span class="cnt">${groups[b].length}</span></h2>`:'')+`<div class="stack">${groups[b].map(c=>cardEl(c,c.parent?'kid':'',1,0)).join('')}</div>`).join('');
+ return body||(all.length?'<div class="empty"><b>No matches</b>Try a different bank, filter or the last 4 digits.</div>':'<div class="empty"><b>Your wallet is empty</b>Add a card by typing it in or scanning it.</div>')}
+function refreshList(){const e=$('#lst');if(e)e.innerHTML=S.tab==='cards'?cardsBody():itemsBody()}
+function listV(){S.tab=S.tab||'cards';if(S.tab!=='cards')return itemsV();const all=S.vault.cards.filter(c=>!CFG.profile||c.pid===CFG.profile),mode=CFG.group||'bank',fk=S.fk||'All';
+ const gk=c=>mode==='network'?(netOf(c)||'Other'):(c.bank||'Other'),ng=new Set(all.map(gk)).size,now=Date.now();
+ const tl=all.filter(c=>c.kind!=='Debit').reduce((a,c)=>a+(+c.limit||0),0);
+ const soon=all.filter(c=>{const d=expDate(c);return d&&d-now<60*864e5}).map(c=>(c.name||c.bank)+(expDate(c)<now?' expired ':' expires ')+c.expiry);
+ const sub=all.length?all.length+(all.length===1?' card':' cards')+(mode==='all'?'':' in '+ng+(mode==='network'?(ng===1?' network':' networks'):(ng===1?' bank':' banks')))+(tl?' · ₹'+tl.toLocaleString('en-IN')+' total limit':''):'Encrypted on this phone';
+ return`<div class="row sp"><div><h1>Cards</h1><p class="sub">${sub}</p></div><div class="row"><button class="ib" style="padding:0;overflow:hidden;font-weight:700;color:#fff;background:var(--acc)" aria-label="Profiles" onclick="profPick()">${profAvatar()}</button><button class="ib" aria-label="Insights" onclick="S.view='in';render()">${IC.chart}</button><button class="ib" aria-label="Search everything" onclick="gsOpen()">${IC.search}</button><button class="ib" aria-label="Settings" onclick="S.view='set';render()">${IC.set}</button><button class="ib" aria-label="Lock" onclick="lock(true)">${IC.lock}</button></div></div>
+ ${tabsH()}${noteH()}${soon.length?`<div class="note">${esc(soon.join(', '))}</div>`:''}
+ <div class="seg"><button class="${mode==='bank'?'on':''}" onclick="setGroup('bank')">By bank</button><button class="${mode==='network'?'on':''}" onclick="setGroup('network')">By network</button><button class="${mode==='all'?'on':''}" onclick="setGroup('all')">All</button></div>
+ <input class="srch" style="margin-top:12px" placeholder="Search bank, name, variant or last 4 digits" value="${esc(S.q)}" oninput="S.q=this.value;refreshList()">
+ <div class="chips">${['All','Credit','Debit'].map(k=>`<button class="${fk===k?'on':''}" onclick="S.fk='${k}';render()">${k}</button>`).join('')}<select class="srt" onchange="setSort(this.value)">${SORTL.map(([v,l])=>`<option value="${v}" ${CFG.sort===v?'selected':''}>${l}</option>`).join('')}</select></div>
+ <div id="lst">${cardsBody()}</div>
+ <button class="fab" onclick="addNew()">${IC.plus}Add card</button>`}
+function open_(id){S.id=id;S.rev={};S.del=false;S.view='detail';render();scrollTo(0,0)}
+function row(k,v,key,raw){const shown=S.rev[key]?v:(key==='num'?mask(raw):'•••');
+ return`<div class="kv"><div><span>${k}</span><br><code>${esc(shown)}</code></div><div class="row"><button class="g s" onclick="S.rev['${key}']=!S.rev['${key}'];render()">${S.rev[key]?'Hide':'Show'}</button><button class="g s" onclick="cp('${key}')">Copy</button></div></div>`}
+function cp(k){const c=byId(S.id);copy(k==='num'?c.number.replace(/\D/g,''):c.cvv,k==='num'?'Number':'CVV')}
+function detailV(){const c=byId(S.id);if(!c){S.view='list';return listV()}if(c.type)return itemDetailV(c);
+ const kids=S.vault.cards.filter(k=>k.parent===c.id),par=c.parent&&byId(c.parent);
+ const ow=+c.owed||0,lm=+c.limit||0,pct=lm?Math.min(100,Math.round(ow/lm*100)):0;
+ const bills=(S.vault.bills||[]).filter(b=>b.cardId===c.id).sort((a,b)=>b.month.localeCompare(a.month)),unpaid=bills.filter(b=>!b.paid),outAmt=unpaid.reduce((a,b)=>a+bRem(b),0);
+ const sp12=cardSpend12(c)+(+c.owed||0),fp=+c.feeSpend||0,fpct=fp?Math.min(100,Math.round(sp12/fp*100)):0;
+ const lnow=new Date(),lq=Math.floor(lnow.getMonth()/3)+1;
+ return`<div class="row sp"><button class="ib" aria-label="Back" onclick="S.view='list';render()">${IC.back}</button><div class="row"><button class="ib" aria-label="Share" onclick="shareItem('${c.id}')">${IC.share}</button><button class="g s" onclick="editCard('${c.id}')">Edit</button><button class="ib" aria-label="Lock" onclick="lock(true)">${IC.lock}</button></div></div>
+ ${cardEl(c,'hero',2,S.rev.num)}
+ ${par?`<p class="sub" style="margin:8px 4px">Add-on of <a href="#" onclick="open_('${par.id}');return false" style="color:var(--acc)">${esc(par.name||par.bank)}</a></p>`:''}
+ <h2>Details</h2><div class="card">${row('Card number',fmtNum(c.number),'num',c.number)}${row('CVV',c.cvv||'—','cvv',c.cvv)}<div class="kv"><div><span>Name on card</span><br>${esc(c.holder)||'—'}</div></div><div class="kv"><div><span>Expiry</span><br>${esc(c.expiry)||'—'}</div></div>${c.limit?`<div class="kv"><div><span>${c.kind==='Debit'?'Daily limit':'Credit limit'}</span><br>₹ ${Number(c.limit).toLocaleString('en-IN')}${CFG.flags.util&&ow?`<div class="mtr ${pct>85?'bad':pct>60?'warn':''}"><i style="width:${pct}%"></i></div><small style="color:var(--mut)">₹ ${ow.toLocaleString('en-IN')} used · ${pct}% of limit</small>`:''}</div></div>`:''}<div class="kv"><div><span>Network and variant</span><br>${esc([netOf(c),c.variant].filter(Boolean).join(' '))||'—'}</div></div>${(c.billDay||c.stmtDay||c.feeDate)?`<div class="kv"><div><span>Reminders</span><br>${[c.billDay?'Bill due on day '+c.billDay:'',c.stmtDay?'Statement on day '+c.stmtDay:'',c.feeDate?'Annual fee '+fd(c.feeDate).slice(0,5):''].filter(Boolean).map(esc).join('<br>')}</div></div>`:''}${c.notes?`<div class="kv"><div><span>Notes</span><br>${esc(c.notes)}</div></div>`:''}</div>
+ ${CFG.flags.fee&&fp?`<h2>Annual fee waiver</h2><div class="card"><div class="kv"><div><span>Spent in the last 12 months (incl. current balance)</span><br>₹ ${sp12.toLocaleString('en-IN')} of ₹ ${fp.toLocaleString('en-IN')} · ${fpct}%</div></div><div style="padding:0 0 14px"><div class="mtr ${fpct>=100?'':fpct>70?'warn':''}"><i style="width:${fpct}%"></i></div><p class="sub" style="margin:6px 2px 0">${fpct>=100?'Target met — the ₹ '+Number(c.fee||0).toLocaleString('en-IN')+' fee should be waived.':'₹ '+(fp-sp12).toLocaleString('en-IN')+' more to waive the ₹ '+Number(c.fee||0).toLocaleString('en-IN')+' annual fee'}</p></div></div>`:''}
+ ${CFG.flags.bills?`<h2>Bills</h2>${bills.length?`<div class="card">${bills.map(b=>`<div class="lrow"><div class="grow"><b>₹ ${Number(b.amount).toLocaleString('en-IN')} · ${esc(b.month)}</b><small>${b.paid?'Paid in full':((+b.paidAmt?'₹ '+Number(b.paidAmt).toLocaleString('en-IN')+' paid · ₹ '+bRem(b).toLocaleString('en-IN')+' left · ':'')+(b.due?'Due '+fd(b.due):'Unpaid'))}</small></div>${b.paid?'<span class="chp">Paid</span>':`<button class="s" onclick="payBill('${b.id}')">${+b.paidAmt?'Add payment':'Mark paid'}</button>`}</div>`).join('')}</div>`:'<p class="sub" style="margin:0 4px 10px">No bills recorded yet.</p>'}<div class="row" style="margin:8px 4px 0"><button class="g s" onclick="addBill('${c.id}')">Record bill</button>${CFG.flags.insights?`<button class="g s" onclick="addSpend('${c.id}')">Record spend</button>`:''}</div>${unpaid.length?`<p class="sub" style="margin:10px 4px 0">Total outstanding: <b style="color:var(--tx)">₹ ${outAmt.toLocaleString('en-IN')}</b> · ${unpaid.length} unpaid</p>`:''}`:''}
+ ${CFG.flags.lounge&&(c.lounges||[]).length?`<h2>Lounge access</h2><div class="card">${(c.lounges||[]).map(l=>{const key=l.period==='Quarter'?lnow.getFullYear()+'-Q'+lq:String(lnow.getFullYear());if(l.key!==key){l.key=key;l.used=0}const left=l.entitled-l.used;return`<div class="kv"><div><span>${l.scope} · ${l.period}</span><br><b>${left}</b> of ${l.entitled} visits left${l.minSpend?' · min spend ₹'+Number(l.minSpend).toLocaleString('en-IN'):''}</div><div class="row"><button class="g s" aria-label="Undo a visit" onclick="logLounge('${c.id}','${l.id}',-1)">−</button><button class="s" onclick="logLounge('${c.id}','${l.id}',1)">Log visit</button></div></div>`}).join('')}</div>`:''}
+ <h2>Photos (${(c.photos||[]).length})</h2>${(c.photos||[]).length?`<div class="ph">${c.photos.map(p=>`<figure><img src="${p.data}" onclick="zoom('${p.id}')" alt=""><figcaption>${esc(p.label)}</figcaption></figure>`).join('')}</div>`:'<p class="sub" style="margin:0 4px">No photos yet. Tap Edit to attach the front and back.</p>'}
+ ${kids.length?`<h2>Add-on cards</h2>${kids.map(k=>tile(k,1)).join('')}`:''}
+ <div style="margin-top:30px"><button class="big g" style="margin-bottom:10px" onclick="lostCard('${c.id}')">${c.blocked?'Blocked card options':'Lost or stolen?'}</button><button class="big ${S.del?'d':'g'}" onclick="rm()">${S.del?'Tap again to delete permanently':'Delete card'}</button></div>`}
+function closeZoom(){const v=$('#zoomv');if(v)v.remove();return !!v}
+function zoom(pid){const p=byId(S.id).photos.find(x=>x.id===pid);closeZoom();const v=document.createElement('div');v.className='view';v.id='zoomv';
+ v.innerHTML=`<img src="${p.data}" alt=""><button class="ib zx" aria-label="Close photo" onclick="closeZoom()">${IC.x}</button>`;
+ v.onclick=e=>{if(e.target.tagName==='IMG')closeZoom()};document.body.appendChild(v)}
+function goBack(){if(closeZoom())return;const nf=$('#nfcx');if(nf){nf.click();return}const sh=document.querySelector('.view.sh');if(sh){sh.querySelector('#sh_c').click();return}
+ if(S.view==='edit')return cancel();
+ if(S.view==='set'){if(S.setSub){S.setSub='';return render()}S.del=false;S.view='list';return render()}
+ if(S.view==='detail'||S.view==='in'||S.view==='gs'){S.del=false;S.view='list';return render()}
+ if(window.CV)CV.minimize()}
+if(window.CV)CV.onBack(goBack);
+async function rm(){if(!S.del){S.del=true;return render()}
+ const id=S.id,it=byId(id);if(!it){S.view='list';return render()}
+ S.vault.cards=S.vault.cards.filter(c=>c.id!==id);S.vault.cards.forEach(c=>{if(c.parent===id)c.parent=''});S.vault.items=(S.vault.items||[]).filter(c=>c.id!==id);
+ S.vault.bin=S.vault.bin||[];S.vault.bin.unshift(Object.assign({},it,{deletedAt:Date.now()}));if(S.vault.bin.length>100)S.vault.bin.length=100;
+ await persist();S.view='list';S.del=false;
+ toastUndo('Moved to recycle bin',async()=>{S.vault.bin=(S.vault.bin||[]).filter(b=>b.id!==id);const home=it.type?(S.vault.items=S.vault.items||[]):S.vault.cards;if(!home.some(x=>x.id===id))home.push(it);delete it.deletedAt;await persist();if(S.view==='list')render()})}
+
+
+const secs=[[0,'Immediately'],[30,'After 30 seconds'],[60,'After 1 minute'],[300,'After 5 minutes'],[900,'After 15 minutes']];
+function setV(){const defs=[['pw','Master password']].concat(CFG.pin?[['pin','PIN']]:[],CFG.bio&&S.bioOK?[['bio','Fingerprint or face']]:[]);
+return`<div class="row"><button class="ib" aria-label="Back" onclick="S.view='list';render()">${IC.back}</button><h1 class="m">Settings</h1></div>
+<h2>Personalise</h2><div class="card"><div class="opt"><div>Appearance and app icon<small>Theme, accent colour and launcher icon</small></div><button class="g s" onclick="S.setSub='appear';render()">Open</button></div></div>
+<h2>Sign-in</h2><div class="card">
+<div class="opt"><div>Default sign-in<small>What the lock screen offers first</small></div><select onchange="CFG.def=this.value;saveCfg()">${defs.map(([v,l])=>`<option value="${v}" ${CFG.def===v?'selected':''}>${l}</option>`).join('')}</select></div>
+<div class="opt"><div>PIN unlock<small>4 to 6 digits. Turns itself off after 5 wrong tries</small></div><input class="sw" type="checkbox" ${CFG.pin?'checked':''} onchange="togglePin(this)"></div>
+<div class="opt"><div>Fingerprint or face unlock<small>${S.bioOK?'Locked to your fingerprint by the phone’s secure hardware. Adding a new fingerprint turns it off':'Needs a fingerprint or strong face unlock set up on the phone'}</small></div><input class="sw" type="checkbox" ${CFG.bio?'checked':''} ${S.bioOK?'':'disabled'} onchange="toggleBio(this)"></div>
+<div class="opt"><div>Master password<small>Re-encrypts your vault with a new password</small></div><button class="g s" onclick="chgPw()">Change</button></div></div>
+<h2>Privacy</h2><div class="card">
+<div class="opt"><div>Auto-lock<small>Locks when you leave the app and after this much idle time</small></div><select onchange="CFG.lock=+this.value;saveCfg();bump()">${secs.map(([v,l])=>`<option value="${v}" ${CFG.lock===v?'selected':''}>${l}</option>`).join('')}</select></div>
+<div class="opt"><div>Allow screenshots<small>Off hides the app in recent apps and blocks screenshots and screen recording</small></div><input class="sw" type="checkbox" ${CFG.shots?'checked':''} onchange="CFG.shots=this.checked;saveCfg();CV.setSecure(!CFG.shots)"></div>
+<div class="opt"><div>Include CVV when sharing a card<small>Off by default. Sharing sends the text in plain form to the app you pick</small></div><input class="sw" type="checkbox" ${CFG.shareCvv?'checked':''} onchange="CFG.shareCvv=this.checked;saveCfg()"></div>
+</div>
+<h2>Features</h2><div class="card">
+${[['flip','Card flip','Tap a card to flip it over to the back photo'],['util','Utilisation bar','Show how much of each card limit is used'],['fee','Fee waiver tracker','Track spending toward annual fee waivers'],['bills','Bills and spends','Record bills and mark them paid'],['insights','Monthly insights','Spending breakdowns by month and category'],['lounge','Lounge access','Track domestic and international lounge visits']].map(([k,l,s])=>`<div class="opt"><div>${l}<small>${s}</small></div><input class="sw" type="checkbox" ${CFG.flags[k]?'checked':''} onchange="CFG.flags['${k}']=this.checked;saveCfg()"></div>`).join('')}
+<div class="opt"><div>On-screen PIN keypad<small>A number pad with dots instead of the phone keyboard</small></div><input class="sw" type="checkbox" ${CFG.keypad!==false?'checked':''} onchange="CFG.keypad=this.checked;saveCfg()"></div>
+<div class="opt"><div>Vibration feedback<small>A small tap on keypad presses, card flips and lounge logging</small></div><input class="sw" type="checkbox" ${CFG.haptic!==false?'checked':''} onchange="CFG.haptic=this.checked;saveCfg()"></div>
+</div>
+${window.CV&&CV.isNative?`<h2>Transaction reader</h2><div class="card">
+<div class="opt"><div>Notification access<small>Reads bank transaction alerts on this device and turns them into spends. Alerts are queued locally and only Vaultly reads them; nothing is uploaded</small></div><button class="g s" onclick="notifGrant()">${S.notifOK?'Granted ✓':'Grant access'}</button></div>
+<div class="opt"><div>Import spends from notifications<small>Review the recent transaction alerts and save them as spends with a category</small></div><button class="g s" onclick="notifPull()">Import</button></div>
+<div class="opt"><div>Check when I unlock<small>Looks for new alerts each time you unlock and lists them for review</small></div><input class="sw" type="checkbox" ${CFG.autoPull!==false?'checked':''} onchange="CFG.autoPull=this.checked;saveCfg()"></div></div>`:''}
+<h2>Data</h2><div class="card"><div class="opt"><div>Recycle bin<small>Deleted items are kept for 30 days, with Undo</small></div><button class="g s" onclick="S.setSub='bin';render()">Open</button></div></div>
+<h2>Reminders</h2><div class="card">
+<div class="opt"><div>Bill, statement and fee reminders<small>Notifications show only the card name, never numbers. They refresh whenever you open the app</small></div><input class="sw" type="checkbox" ${CFG.rem?'checked':''} onchange="CFG.rem=this.checked;saveCfg();syncRem()"></div>
+<div class="opt"><div>Remind me<small>Before each bill or statement date. Annual fees get 7 days, IDs get 30</small></div><select onchange="CFG.lead=+this.value;saveCfg();syncRem()">${[0,1,2,3,5,7].map(v=>`<option value="${v}" ${CFG.lead===v?'selected':''}>${v?v+(v===1?' day before':' days before'):'On the day'}</option>`).join('')}</select></div></div>
+${window.CV&&CV.isNative?`<h2>Automatic backup</h2><div class="card">
+<div class="opt"><div>Backup folder<small>${S.bkName?esc(S.bkName):'Not chosen yet. Pick a folder on your phone, SD card, or a Drive or OneDrive folder'}</small></div><button class="g s" onclick="bkPick()">${S.bkName?'Change':'Choose'}</button></div>
+<div class="opt"><div>Back up automatically<small>An encrypted file is saved when you unlock or change something</small></div><select onchange="CFG.bkDays=+this.value;saveCfg();autoBackup(false);render()">${BK_FREQ.map(([v,l])=>`<option value="${v}" ${(CFG.bkDays||0)===v?'selected':''}>${l}</option>`).join('')}</select></div>
+<div class="opt"><div>Keep the latest<small>Older automatic backups are deleted</small></div><select onchange="CFG.bkKeep=+this.value;saveCfg()">${[3,5,7,10,20].map(v=>`<option value="${v}" ${(CFG.bkKeep||7)===v?'selected':''}>${v} files</option>`).join('')}</select></div>
+<div class="opt"><div>Back up now<small>${CFG.bkLast?'Last automatic backup: '+new Date(CFG.bkLast).toLocaleString('en-IN'):'No automatic backup yet'}${CFG.bkErr?' · '+esc(CFG.bkErr):''}</small></div><button class="g s" onclick="autoBackup(true)">Back up</button></div></div>`:''}
+<h2>Backup and transfer</h2><div class="card">
+<div class="opt"><div>Encrypted backup<small>Includes photos. Needs your master password to restore</small></div><button class="g s" onclick="expEnc()">Export</button></div>
+<div class="opt"><div>Bitwarden JSON<small>Cards only, no photos. The file is not encrypted, so delete it after use</small></div><button class="g s" onclick="expBw()">Export</button></div>
+<div class="opt"><div>Import<small>Bitwarden JSON (unencrypted export) or a Vaultly backup</small></div><button class="g s" onclick="pickFile('imp')">Choose file</button></div>
+<div class="opt"><div>Back up to Drive or OneDrive<small>Encrypted. Opens the share sheet — pick Drive, OneDrive or email and save the file there</small></div><button class="g s" onclick="shareBackup()">Back up</button></div>
+<div class="opt"><div>Test a backup file<small>Checks that a backup opens with its password, without restoring it</small></div><button class="g s" onclick="pickFile('tbk')">Choose file</button></div>
+<div class="opt"><div>Nudge me about backups<small>Shows a reminder if my last backup is over a week old</small></div><input class="sw" type="checkbox" ${CFG.autoBk?'checked':''} onchange="CFG.autoBk=this.checked;saveCfg()"></div></div>
+<input id="imp" type="file" accept=".json,.cvault,application/json,*/*" hidden onchange="doImport(this)"><input id="tbk" type="file" accept="*/*" hidden onchange="testBackup(this)">
+<div class="err" style="margin-top:12px">${esc(S.err)}</div><p class="sub" style="text-align:center;margin-top:28px">Vaultly v${S.ver||'1.10.0'}</p>`}
+function appearV(){return`<div class="row"><button class="ib" aria-label="Back" onclick="S.setSub='';render()">${IC.back}</button><h1 class="m">Appearance</h1></div>
+<h2>Theme</h2><div class="card" style="padding:14px 16px"><div class="thm">${THEMES.map(([k,l,bg,fg])=>`<button class="th ${(CFG.theme||'auto')===k?'sel':''}" style="background:${bg};color:${fg}" onclick="setTheme('${k}')">${l}</button>`).join('')}</div>
+<p class="sub" style="margin:16px 0 10px">Accent colour</p><div class="pal" style="margin:0 0 4px"><button type="button" class="swc auto ${CFG.acc?'':'sel'}" onclick="setAcc('')">Auto</button>${ACCS.map(c=>`<button type="button" class="swc ${CFG.acc===c?'sel':''}" style="background:${c}" aria-label="Accent ${c}" onclick="setAcc('${c}')"></button>`).join('')}</div></div>
+${window.CV&&CV.isNative?`<h2>App icon</h2><div class="card" style="padding:14px 16px"><div class="thm">${ICONS.map(([k,l])=>`<button class="th ico ${S.icon===k?'sel':''}" onclick="setIcon('${k}')"><img src="icons/${k}.png" alt=""><span>${l}</span></button>`).join('')}</div><p class="sub" style="margin:12px 0 0">Android may close the app for a moment while the icon changes.</p></div>`:''}`}
+async function toggleBio(el){if(!el.checked){CFG.bio=false;if(CFG.def==='bio')CFG.def='pw';saveCfg();await CV.bioClear();return render()}
+ const v=await sheet('Turn on biometric unlock',[{id:'pw',l:'Master password'}],'Continue');if(!v){el.checked=false;return}
+ try{await checkPw(v.pw)}catch(e){el.checked=false;return toast('Wrong master password')}
+ S.picking=true;try{await CV.bioEnroll(v.pw);CFG.bio=true;if(CFG.def==='pw')CFG.def='bio';saveCfg();toast('Biometric unlock on')}catch(e){el.checked=false;toast('Cancelled or not available')}S.picking=false;render()}
+async function togglePin(el){if(!el.checked){await killPin();return render()}
+ const v=await sheet('Set a PIN',[{id:'pw',l:'Master password'},{id:'p1',l:'New PIN (4 to 6 digits)',num:1},{id:'p2',l:'Confirm PIN',num:1}],'Save PIN');if(!v){el.checked=false;return}
+ if(!/^\d{4,6}$/.test(v.p1)||v.p1!==v.p2){el.checked=false;return toast('PINs must match and be 4 to 6 digits')}
+ try{await checkPw(v.pw)}catch(e){el.checked=false;return toast('Wrong master password')}
+ try{const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));
+  const ct=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv},await derive(v.p1,salt),enc.encode(v.pw)));
+  await CV.saveSecret('pin_blob',JSON.stringify({salt:b64(salt),iv:b64(iv),ct:b64(ct)}));await CV.saveSecret('pin_fail','0');
+  CFG.pin=true;CFG.pinLen=v.p1.length;if(CFG.def==='pw')CFG.def='pin';saveCfg();toast('PIN set')}catch(e){el.checked=false;toast('Couldn’t save the PIN')}render()}
+const brand=n=>{n=(n||'').replace(/\D/g,'');return/^4/.test(n)?'Visa':/^(5[1-5]|2[2-7])/.test(n)?'Mastercard':/^3[47]/.test(n)?'Amex':/^(60|65|81|82|508)/.test(n)?'RuPay':/^6(011|5)/.test(n)?'Discover':/^3(0|6|8)/.test(n)?'Diners':''};
+const normNet=b=>{b=(b||'').toLowerCase();return b.includes('visa')?'Visa':b.includes('master')?'Mastercard':b.includes('rupay')?'RuPay':(b.includes('amex')||b.includes('american'))?'Amex':b.includes('diners')?'Diners':b.includes('discover')?'Discover':''};
+const guessBank=t=>Object.keys(BANKS).find(b=>(t||'').toLowerCase().includes(b.toLowerCase()))||'';
+async function expEnc(){await guard(async()=>{try{await CV.saveFile('vaultly-backup.cvault',JSON.stringify(await dbGet('vault')));CFG.lastBackup=Date.now();saveCfg()}catch(e){toast('Export cancelled')}})}
+async function expBw(){if(!S.vault)return;const banks=[...new Set(S.vault.cards.map(c=>c.bank||'Other'))],fid=Object.fromEntries(banks.map(b=>[b,uid()+'-'+uid()]));
+ const items=S.vault.cards.map(c=>{const[m,y]=(c.expiry||'').split('/');return{id:crypto.randomUUID(),organizationId:null,folderId:fid[c.bank||'Other'],type:3,reprompt:0,name:[c.bank,c.name,c.variant].filter(Boolean).join(' '),notes:c.notes||null,favorite:false,card:{cardholderName:c.holder||null,brand:netOf(c)||null,number:c.number||null,expMonth:m?String(+m):null,expYear:y?(y.length===2?'20'+y:y):null,code:c.cvv||null},collectionIds:null}});
+ await guard(async()=>{try{await CV.saveFile('bitwarden-cards.json',JSON.stringify({encrypted:false,folders:banks.map(b=>({id:fid[b],name:b})),items},null,2))}catch(e){toast('Export cancelled')}})}
+async function doImport(inp){S.picking=false;const f=inp.files[0];inp.value='';if(!f)return;let j;try{j=JSON.parse(await f.text())}catch(e){S.err='Not a valid JSON file.';return render()}
+ if(typeof j==='string'){try{j=JSON.parse(j)}catch(e){}}
+ if(j&&typeof j==='object'&&!Array.isArray(j)&&!j.salt&&j.vault&&typeof j.vault==='object'&&j.vault.salt)j=j.vault;
+ let add=[];
+ if(j.encrypted===true){S.err='That Bitwarden export is encrypted. Re-export it as unencrypted JSON.';return render()}
+ if(Array.isArray(j.items)){const fn=Object.fromEntries((j.folders||[]).map(x=>[x.id,x.name]));
+  add=j.items.filter(i=>i.type===3&&i.card).map(i=>{const k=i.card,y=String(k.expYear||''),nm=i.name||'',num=(k.number||'').replace(/\D/g,'');return{id:uid(),bank:fn[i.folderId]||guessBank(nm)||'Other',name:nm,holder:k.cardholderName||'',number:num,expiry:k.expMonth?String(k.expMonth).padStart(2,'0')+'/'+y.slice(-2):'',cvv:k.code||'',kind:'Credit',virtual:false,parent:'',notes:i.notes||'',network:normNet(k.brand)||brand(num),variant:'',photos:[]}})}
+ else if(j.salt&&j.iv&&j.ct){const v=await sheet('Backup password',[{id:'pw',l:'Password used for this backup'}],'Restore');if(!v)return;try{const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(j.iv)},await derive(v.pw,unb64(j.salt)),unb64(j.ct));const bv=JSON.parse(dec.decode(pt));add=bv.cards||[];S.addIt=bv.items||[]}catch(e){S.err='Wrong backup password.';return render()}}
+ else{S.err='Unrecognised file.';return render()}
+ let n=0;for(const c of add){if(S.vault.cards.some(x=>x.id===c.id||(x.number&&x.number===c.number&&x.expiry===c.expiry)))continue;S.vault.cards.push(c);n++}
+ S.vault.items=S.vault.items||[];for(const c of(S.addIt||[])){if(S.vault.items.some(x=>x.id===c.id))continue;S.vault.items.push(c);n++}S.addIt=null;
+ try{await persist();S.err='';toast(n?n+' item'+(n===1?'':'s')+' imported':'Nothing new to import')}catch(e){S.err='Couldn’t save imported cards.'}render()}
+
+// ---- card scanning (camera + on-device OCR) ----
+const luhn=n=>{let s=0,d=false;for(let i=n.length-1;i>=0;i--){let x=+n[i];if(d){x*=2;if(x>9)x-=9}s+=x;d=!d}return s%10===0};
+const VARS=['World Elite','Signature','Platinum','World','Infinite','Titanium','Select','Gold','Classic','Premium'];
+function parseCard(t){const out={};const cands=(t.match(/(?:\d[ -]?){13,19}/g)||[]).map(x=>x.replace(/\D/g,'')).filter(x=>x.length>=13&&x.length<=19);
+ out.number=cands.find(luhn)||cands[0]||'';
+ const rest=t.replace(/(?:\d[ -]?){13,19}/g,' ');const m=rest.match(/(0[1-9]|1[0-2])\s*[\/\-]\s*(\d{4}|\d{2})\b/);if(m)out.expiry=m[1]+'/'+m[2].slice(-2);
+ const skip=/BANK|VALID|THRU|DEBIT|CREDIT|VISA|MASTER|RUPAY|PLATINUM|SIGNATURE|CARD|GOOD|MEMBER|SINCE|CLASSIC|GOLD|WORLD|INFINITE|PREMIUM|SELECT|TITANIUM/;
+ const nm=t.split(/\n/).map(l=>l.trim()).find(l=>/^[A-Z][A-Z .'-]{4,}$/.test(l)&&/\s/.test(l)&&!skip.test(l));if(nm)out.holder=nm;
+ const U=t.toUpperCase();const bk=[['HDFC','HDFC'],['ICICI','ICICI'],['AXIS','Axis'],['STATE BANK','SBI'],['SBI','SBI'],['KOTAK','Kotak'],['INDUSIND','IndusInd'],['IDFC','IDFC First'],['AMERICAN EXPRESS','Amex']].find(([k])=>U.includes(k));if(bk)out.bank=bk[1];
+ out.network=brand(out.number)||(U.includes('RUPAY')?'RuPay':U.includes('MASTERCARD')?'Mastercard':U.includes('VISA')?'Visa':U.includes('AMERICAN EXPRESS')?'Amex':'');
+ const V=VARS.find(v=>U.includes(v.toUpperCase()));if(V)out.variant=V;return out}
+async function getScan(){if(!(window.CV&&CV.isNative))return null;try{return await guard(()=>CV.scanDoc())}catch(e){return /cancel/i.test(String((e&&e.message)||e))?'cancel':null}}
+async function scan(){const r=await getScan();if(r==='cancel')return;if(r&&r.length)return fillFrom(r[0]);toast('Scanner not available, using the camera');pickFile('scanf')}
+async function scanPhoto(){const label=$('#lbl').value,r=await getScan();if(r==='cancel')return;
+ if(r&&r.length){for(const b of r)S.draft.photos.push({id:uid(),label,data:await shrink(b,1400)});return render()}toast('Scanner not available, using the camera');pickFile('fileC')}
+async function fillFrom(f){toast('Reading card…');try{const img=await shrink(f,1600),txt=await CV.ocr(img),r=parseCard(txt),d=S.draft;
+  ['number','expiry','holder','bank','network','variant'].forEach(k=>{if(r[k]&&!d[k])d[k]=r[k]});if(r.network)d.netSet=true;if(!d.photos.some(p=>p.label==='Front'))d.photos.push({id:uid(),label:'Front',data:await shrink(f,1400)});
+  toast(r.number?'Filled in what I could read. Please check it':'Couldn’t read a number. Try better light')}catch(e){toast('Scanning only works in the Android app')}render()}
+async function doScan(inp){S.picking=false;const f=inp.files[0];inp.value='';if(f)await fillFrom(f)}
+
+const NETS=['Visa','Mastercard','RuPay','Amex','Diners','Discover','Other'];
+const VARLIST=['Classic','Gold','Platinum','Signature','Infinite','Select','Titanium','World','World Elite','Standard','Green','Premium'];
+function blank(){return{id:uid(),pid:CFG.profile||'',bank:'',name:'',holder:'',number:'',expiry:'',cvv:'',kind:'Credit',virtual:false,parent:'',notes:'',network:'',variant:'',limit:'',fav:false,created:Date.now(),netSet:false,photos:[]}}
+function newCard(){S.draft=blank();S.isNew=true;S.err='';S.view='edit';render();scrollTo(0,0)}
+function editCard(id){S.draft=JSON.parse(JSON.stringify(byId(id)));S.draft.netSet=!!S.draft.network&&S.draft.network!==brand(S.draft.number);S.isNew=false;S.err='';S.view='edit';render();scrollTo(0,0)}
+const D=(k,v)=>{S.draft[k]=v};
+async function addLounge(){const v=await sheet('Lounge benefit',[{id:'s',l:'Scope',opts:['Domestic','International']},{id:'p',l:'Period',opts:['Quarter','Year']},{id:'n',l:'Visits entitled',txt:1,ph:'e.g. 4'},{id:'m',l:'Min spend required (₹, optional)',txt:1,ph:'e.g. 50000'}],'Add');if(!v)return;const n=+String(v.n||'').replace(/\D/g,'');if(!n)return toast('Enter how many visits');S.draft.lounges=S.draft.lounges||[];S.draft.lounges.push({id:uid(),scope:v.s,period:v.p,entitled:n,used:0,minSpend:String(v.m||'').replace(/\D/g,'')});render()}
+function delLounge(id){S.draft.lounges=(S.draft.lounges||[]).filter(l=>l.id!==id);render()}
+async function logLounge(cid,lid,dir){const c=byId(cid),l=c&&(c.lounges||[]).find(x=>x.id===lid);if(!l)return;l.used=Math.max(0,Math.min(+l.entitled||0,(+l.used||0)+dir));if(CFG.haptic!==false&&navigator.vibrate)try{navigator.vibrate(8)}catch(e){}await persist();render()}
+function useLounge(id,dir){const l=(S.draft.lounges||[]).find(x=>x.id===id);if(!l)return;l.used=Math.max(0,Math.min(l.entitled,l.used+dir));if(navigator.vibrate)try{navigator.vibrate(6)}catch(_){}render()}
+function autoNet(){if(S.draft.netSet)return;const b=brand(S.draft.number);S.draft.network=b;const e=$('#net');if(e)e.value=b}
+function numIn(el){el.value=el.value.replace(/[^\d ]/g,'');D('number',el.value);autoNet()}
+function limIn(el){el.value=el.value.replace(/\D/g,'');D('limit',el.value)}
+function owedIn(el){el.value=el.value.replace(/\D/g,'');D('owed',el.value)}
+function feeIn(el){el.value=el.value.replace(/\D/g,'');D('fee',el.value)}
+function feeSIn(el){el.value=el.value.replace(/\D/g,'');D('feeSpend',el.value)}
+function cvvIn(el){el.value=el.value.replace(/\D/g,'');D('cvv',el.value)}
+function expIn(el){const d=el.value.replace(/\D/g,'').slice(0,4),p=(S.draft.expiry||'').replace(/\D/g,'').length;let v=d;
+ if(v.length===1&&+v>1)v='0'+v;
+ if(v.length>2)v=v.slice(0,2)+'/'+v.slice(2);else if(v.length===2&&(d.length>p||v!==d))v+='/';
+ el.value=v;D('expiry',v)}
+function editV(){if(S.draft.type)return itemEditV();const d=S.draft,prim=S.vault.cards.filter(c=>!c.parent&&c.id!==d.id),net=d.network||brand(d.number);
+ return`<div class="row sp"><h1 class="m">${S.isNew?'Add card':'Edit card'}</h1><button class="g s" onclick="cancel()">Cancel</button></div>
+ <div class="row" style="margin-top:16px"><button class="g grow ctl" onclick="scan()">${IC.cam}Scan card</button><button class="g grow ctl" onclick="tapCard()">${IC.nfc}Tap card</button></div><input id="scanf" type="file" accept="image/*" capture="environment" hidden onchange="doScan(this)">
+ <label>Bank</label>${comboH('bank',d.bank,'e.g. HDFC')}
+ <label>Card name</label><input value="${esc(d.name)}" oninput="D('name',this.value)" placeholder="e.g. Regalia, Millennia">
+ <div class="row"><div class="grow"><label>Network</label><select id="net" onchange="D('network',this.value);S.draft.netSet=true"><option value="">Select</option>${NETS.map(n=>`<option ${net===n?'selected':''}>${n}</option>`).join('')}</select></div>
+ <div class="grow"><label>Variant</label>${comboH('variant',d.variant,'Signature, Select…')}</div></div>
+ <label>Name on card</label><input value="${esc(d.holder)}" oninput="D('holder',this.value)" autocapitalize="characters">
+ <label>Card number</label><input value="${esc(d.number)}" inputmode="numeric" oninput="numIn(this)" placeholder="1234 5678 9012 3456">
+ <div class="row"><div class="grow"><label>Expiry</label><input value="${esc(d.expiry)}" inputmode="numeric" oninput="expIn(this)" placeholder="MM/YY" maxlength="5"></div><div class="grow"><label>CVV</label><input value="${esc(d.cvv)}" inputmode="numeric" oninput="cvvIn(this)" maxlength="4"></div></div>
+ <div class="row"><div class="grow"><label>Type</label><select onchange="D('kind',this.value);render()">${['Credit','Debit'].map(k=>`<option ${d.kind===k?'selected':''}>${k}</option>`).join('')}</select></div>
+ <div class="grow"><label>Add-on of</label><select onchange="D('parent',this.value)"><option value="">None</option>${prim.map(p=>`<option value="${p.id}" ${d.parent===p.id?'selected':''}>${esc(p.name||p.bank)} ${mask(p.number)}</option>`).join('')}</select></div></div>
+ <label>${d.kind==='Debit'?'Daily limit':'Credit limit'} (₹)</label><input inputmode="numeric" value="${esc(d.limit||'')}" oninput="limIn(this)" placeholder="e.g. 250000">
+ ${CFG.flags.util?`<label>Amount owed right now (₹)</label><input inputmode="numeric" value="${esc(d.owed||'')}" oninput="owedIn(this)" placeholder="Used limit, e.g. 42000">`:''}
+ ${CFG.flags.fee&&d.kind==='Credit'?`<label>Annual fee (₹)</label><input inputmode="numeric" value="${esc(d.fee||'')}" oninput="feeIn(this)" placeholder="e.g. 3000"><label>Fee waiver spend target (₹)</label><input inputmode="numeric" value="${esc(d.feeSpend||'')}" oninput="feeSIn(this)" placeholder="Spend this in a year to waive the fee">`:''}
+ ${CFG.flags.lounge&&d.kind==='Credit'?`<h2>Lounge access</h2>${(d.lounges||[]).map(l=>`<div class="card" style="margin:0 0 8px"><div class="row sp"><b>${l.scope} · ${l.period}</b><button type="button" class="ib" style="width:32px;height:32px" aria-label="Remove" onclick="delLounge('${l.id}')">${IC.x}</button></div><div class="row" style="margin-top:6px"><button class="g s" onclick="useLounge('${l.id}',-1)">−</button><span class="grow" style="text-align:center"><b>${l.used}</b> / ${l.entitled} used</span><button class="g s" onclick="useLounge('${l.id}',1)">＋</button></div>${l.minSpend?`<p class="sub" style="margin:6px 0 0">Min spend ₹${Number(l.minSpend).toLocaleString('en-IN')}</p>`:''}</div>`).join('')}<button class="g s" onclick="addLounge()">Add lounge benefit</button>`:''}
+ <label class="c">Favourite (shows first)<input class="sw" type="checkbox" ${d.fav?'checked':''} onchange="D('fav',this.checked)"></label>
+ <label class="c">Virtual card<input class="sw" type="checkbox" ${d.virtual?'checked':''} onchange="D('virtual',this.checked)"></label>
+ <label>Card colour</label>${palH(d)}
+ <label>Card background</label><div class="pal"><button type="button" class="swc auto ${!d.bg?'sel':''}" onclick="setBgPat('')">None</button>${Object.keys(PATS).map(p=>`<button type="button" class="swc ${d.bg&&d.bg.t==='pat'&&d.bg.v===p?'sel':''}" style="background-color:#3a4;background-image:${PATS[p]}" aria-label="Pattern ${p}" onclick="setBgPat('${p}')"></button>`).join('')}<label class="swc pick ${d.bg&&d.bg.t==='pic'?'sel':''}" style="background:${d.bg&&d.bg.t==='pic'?`url('${d.bg.v}') center/cover`:'var(--sf2)'}">+<input type="file" accept="image/*" onchange="setBgPhoto(this)"></label></div>
+ <h2>Reminders</h2>
+ <label>Annual fee date</label><input type="date" value="${esc(d.feeDate||'')}" onchange="D('feeDate',this.value)">
+ <div class="row"><div class="grow"><label>Bill due day</label><select onchange="D('billDay',this.value)">${dayOpts(d.billDay)}</select></div><div class="grow"><label>Statement day</label><select onchange="D('stmtDay',this.value)">${dayOpts(d.stmtDay)}</select></div></div>
+ <label>Notes</label><textarea rows="2" oninput="D('notes',this.value)">${esc(d.notes)}</textarea>
+ <h2>Photos (${d.photos.length})</h2>
+ ${d.photos.length?`<div class="ph">${d.photos.map(p=>`<figure><img src="${p.data}" alt=""><button class="x d s" onclick="delPh('${p.id}')">✕</button><figcaption>${esc(p.label)}</figcaption></figure>`).join('')}</div>`:''}
+ <div class="row" style="margin-top:10px"><select id="lbl" class="ctl" style="width:auto"><option>Front</option><option>Back</option><option>Other</option></select>
+ <button class="g grow ctl" onclick="scanPhoto()">${IC.cam}Scan</button><button class="g grow ctl" onclick="pickFile('file')">Gallery</button></div><p class="sub" style="margin:8px 4px 0">Scan finds the card edges and crops it for you.</p>
+ <input id="fileC" type="file" accept="image/*" capture="environment" hidden onchange="addPh(this)"><input id="file" type="file" accept="image/*" multiple hidden onchange="addPh(this)">
+ <div class="err" style="margin-top:12px">${esc(S.err)}</div><div class="bar"><button class="big" onclick="saveCard()">Save card</button></div>`}
+function shrink(f,mx){mx=mx||1000;return new Promise((res,rej)=>{const u=URL.createObjectURL(f),im=new Image();im.onload=()=>{const k=Math.min(1,mx/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);res(c.toDataURL('image/jpeg',.8))};im.onerror=rej;im.src=u})}
+async function addPh(inp){const label=$('#lbl').value;for(const f of inp.files){try{S.draft.photos.push({id:uid(),label,data:await shrink(f)})}catch(e){toast('Couldn’t read that image')}}S.picking=false;render()}
+function delPh(id){S.draft.photos=S.draft.photos.filter(p=>p.id!==id);render()}
+function cancel(){S.view=S.isNew?'list':'detail';S.draft=null;render()}
+async function saveCard(){const d=S.draft;if(d.type)return saveItem();if(!d.bank.trim()||last4(d.number).length<4){S.err='Bank and a valid card number are required.';return render()}
+ if(d.expiry&&!/^(0[1-9]|1[0-2])\/\d{2}$/.test(d.expiry)){S.err='Expiry should look like 08/29.';return render()}
+ d.bank=d.bank.trim();d.number=d.number.replace(/\D/g,'');d.network=d.network||brand(d.number)||'';d.variant=(d.variant||'').trim();delete d.netSet;
+ const i=S.vault.cards.findIndex(c=>c.id===d.id);if(i<0)S.vault.cards.push(d);else S.vault.cards[i]=d;
+ try{await persist()}catch(e){S.err='Couldn’t save: storage is full or unavailable.';return render()}
+ S.id=d.id;S.draft=null;S.view='detail';S.rev={};render()}
+
+// ---- vault tabs, other item types ----
+const TABS=[['cards','Cards'],['bank','Accounts'],['id','IDs'],['note','Notes'],['login','Logins'],['ins','Insurance'],['veh','Vehicle'],['bill','Bills']];
+const tabsH=()=>`<div class="tabs">${TABS.map(([k,l])=>`<button class="${S.tab===k?'on':''}" onclick="S.tab='${k}';S.q='';render()">${l}</button>`).join('')}</div>`;
+const fd=v=>v?String(v).split('-').reverse().join('/'):'';
+const TYPES={
+ bank:{tab:'Accounts',noun:'account',req:'bank',reqL:'the bank name',ttl:i=>i.bank,sub:i=>[i.kind,i.acno?'•••• '+String(i.acno).slice(-4):''].filter(Boolean).join(' · '),
+  f:[['bank','Bank','t'],['holder','Account holder','t'],['kind','Account type','o',['Savings','Current','Salary','Other']],['acno','Account number','sn'],['ifsc','IFSC code','t'],['branch','Branch','t'],['upi','UPI ID','t'],['phone','Linked mobile','tn'],['custid','Customer ID','s'],['notes','Notes','ta']]},
+ id:{tab:'IDs',noun:'ID',req:'idno',reqL:'the ID number',ttl:i=>i.idtype,sub:i=>[i.holder,i.idno?'•••• '+String(i.idno).slice(-4):''].filter(Boolean).join(' · '),
+  f:[['idtype','ID type','o',['Aadhaar','PAN','Passport','Driving licence','Voter ID','Other']],['holder','Name','t'],['idno','ID number','s'],['dob','Date of birth','d'],['expiry','Expiry date','d'],['notes','Notes','ta']]},
+ note:{tab:'Notes',noun:'note',req:'title',reqL:'a title',ttl:i=>i.title,sub:i=>(i.body||'').slice(0,60),f:[['title','Title','t'],['body','Note','ta'],['tags','Tags','t']]},
+ login:{tab:'Logins',noun:'login',req:'user',reqL:'a username or email',ttl:i=>i.site||i.user,sub:i=>i.user,f:[['site','Website or app','t'],['user','Username or email','t'],['pass','Password','s'],['url','Sign-in URL','t'],['notes','Notes','ta']]},
+ ins:{tab:'Insurance',noun:'policy',req:'policy',reqL:'the policy number',ttl:i=>[i.itype,i.provider].filter(Boolean).join(' · ')||'Policy',sub:i=>i.policy?'•••• '+String(i.policy).slice(-4):'',f:[['provider','Provider','t'],['itype','Type','o',['Health','Life','Motor','Travel','Home','Other']],['policy','Policy number','s'],['holder','Policy holder','t'],['premium','Premium (₹)','tn'],['start','Start date','d'],['renew','Renewal date','d'],['nominee','Nominee','t'],['notes','Notes','ta']]},
+ veh:{tab:'Vehicle',noun:'vehicle',req:'reg',reqL:'the registration number',ttl:i=>i.maker||i.reg,sub:i=>[i.vtype,i.reg].filter(Boolean).join(' · '),f:[['maker','Make and model','t'],['vtype','Type','o',['Car','Bike','Scooter','Commercial','Other']],['reg','Registration number','t'],['insExp','Insurance expiry','d'],['pucExp','PUC expiry','d'],['notes','Notes','ta']]},
+ bill:{tab:'Bills',noun:'bill',req:'vendor',reqL:'the vendor name',ttl:i=>i.vendor,sub:i=>[(i.status==='Paid'?'Paid':(i.amount?'₹'+Number(i.amount).toLocaleString('en-IN'):'Unpaid')),i.due?'due '+fd(i.due):''].filter(Boolean).join(' · '),f:[['vendor','Vendor or biller','t'],['bno','Bill or invoice number','t'],['amount','Amount (₹)','tn'],['bdate','Bill date','d'],['due','Due date','d'],['status','Status','o',['Unpaid','Paid']],['notes','Notes','ta']]}
+};
+const IDCOL={Aadhaar:'#c2410c',PAN:'#1d4ed8',Passport:'#1e3a8a','Driving licence':'#047857','Voter ID':'#0f766e',Other:'#475569'};
+const idCol=it=>IDCOL[it.idtype]||'#475569';
+function idStatus(it){if(!it.expiry)return null;const days=Math.ceil((new Date(it.expiry+'T23:59:00')-Date.now())/864e5);
+ return days<0?{t:'Expired',bad:1}:days<=90?{t:'Expires in '+days+(days===1?' day':' days'),bad:days<=30}:{t:'Valid till '+it.expiry.slice(5,7)+'/'+it.expiry.slice(0,4)}}
+function idEl(it,cls,click,full){const oc=click?`onclick="open_('${it.id}')"`:'',st=idStatus(it),n=String(it.idno||'');
+ return`<div class="idc ${cls}" ${oc}><div class="idh" style="background:${idCol(it)}"><span>${esc(it.idtype)}</span>${st?`<span class="chp ${st.bad?'bad':''}">${st.t}</span>`:''}</div><div class="idb"><div class="idp" style="background:${idCol(it)}">${esc((it.holder||it.idtype||'?')[0].toUpperCase())}</div><div class="idn"><b>${esc(it.holder)||'—'}</b><span class="num">${n?(full?esc(n):'•••• '+esc(n.slice(-4))):''}</span></div></div></div>`}
+const GENCOL={note:'#475569',login:'#1d4ed8',ins:'#0f766e',veh:'#b45309',bill:'#be123c'};
+function genEl(it,cls,click){const oc=click?`onclick="open_('${it.id}')"`:'';return`<div class="li ${cls||''}" ${oc}><div class="av" style="background:${GENCOL[it.type]||'#475569'}">${esc((TYPES[it.type].ttl(it)||'?')[0].toUpperCase())}</div><div class="grow"><b>${esc(TYPES[it.type].ttl(it))}</b><small>${esc(TYPES[it.type].sub(it)||'')}</small></div></div>`}
+function acctEl(it,cls,click,full){const oc=click?`onclick="open_('${it.id}')"`:'',n=String(it.acno||'');
+ return`<div class="cc acct ${cls}" style="--c:${bankCol(it.bank||'Bank')}" ${oc}><div class="r"><span class="nm">${esc(it.bank)}</span><span class="nv">${esc(it.kind||'')}</span></div><div class="r">${IC.bank}<span>${esc(it.upi||'')}</span></div><div class="num">${n?(full?esc(n.replace(/(.{4})/g,'$1 ').trim()):'•••• '+esc(n.slice(-4))):'No account number'}</div><div class="r"><span>${esc(it.holder)||'&nbsp;'}</span><span>${it.ifsc?'IFSC '+esc(it.ifsc):''}</span></div></div>`}
+function itemsBody(){const T=TYPES[S.tab],q=S.q.toLowerCase(),mine=(S.vault.items||[]).filter(i=>i.type===S.tab&&(!CFG.profile||i.pid===CFG.profile));
+ const list=mine.filter(i=>!q||Object.values(i).filter(v=>typeof v==='string').join(' ').toLowerCase().includes(q));
+ list.sort(CFG.isort==='new'?(a,b)=>(b.created||0)-(a.created||0):CFG.isort==='nameDesc'?(a,b)=>String(T.ttl(b)||'').localeCompare(String(T.ttl(a)||'')):(a,b)=>String(T.ttl(a)||'').localeCompare(String(T.ttl(b)||'')));
+ return list.length?list.map(i=>S.tab==='id'?idEl(i,'',1,0):S.tab==='bank'?acctEl(i,'',1,0):genEl(i,'',1)).join(''):`<div class="empty"><b>${mine.length?'No matches':'Nothing here yet'}</b>${mine.length?'Try a different search.':'Tap Add to save your first '+esc(T.noun)+'.'}</div>`}
+function itemsV(){const T=TYPES[S.tab],n=(S.vault.items||[]).filter(i=>i.type===S.tab&&(!CFG.profile||i.pid===CFG.profile)).length;
+ return`<div class="row sp"><div><h1>${T.tab}</h1><p class="sub">${n?n+' saved':'Encrypted on this phone'}</p></div><div class="row"><button class="ib" style="padding:0;overflow:hidden;font-weight:700;color:#fff;background:var(--acc)" aria-label="Profiles" onclick="profPick()">${profAvatar()}</button><button class="ib" aria-label="Settings" onclick="S.view='set';render()">${IC.set}</button><button class="ib" aria-label="Lock" onclick="lock(true)">${IC.lock}</button></div></div>
+ ${tabsH()}${noteH()}
+ <input class="srch" style="margin-top:12px" placeholder="Search ${esc(T.tab.toLowerCase())}" value="${esc(S.q)}" oninput="S.q=this.value;refreshList()">
+ <div class="chips"><select class="srt" style="margin-left:0" onchange="CFG.isort=this.value;saveCfg();refreshList()"><option value="name" ${(CFG.isort||'name')==='name'?'selected':''}>Sort: Name (A–Z)</option><option value="nameDesc" ${CFG.isort==='nameDesc'?'selected':''}>Sort: Name (Z–A)</option><option value="new" ${CFG.isort==='new'?'selected':''}>Sort: Newest first</option></select></div>
+ <div id="lst">${itemsBody()}</div>
+ <button class="fab" onclick="addNew()">${IC.plus}Add ${esc(T.noun)}</button>`}
+
+const addNew=()=>S.tab==='cards'?newCard():newItem(S.tab);
+function newItem(type){const d={id:uid(),type,pid:CFG.profile||'',created:Date.now(),photos:[]};TYPES[type].f.forEach(([k,,t,o])=>{if(t==='o')d[k]=o[0]});S.draft=d;S.isNew=true;S.err='';S.view='edit';render();scrollTo(0,0)}
+function editItem(id){S.draft=JSON.parse(JSON.stringify(byId(id)));S.isNew=false;S.err='';S.view='edit';render();scrollTo(0,0)}
+function irow(l,v,k,t){const sec=t==='s'||t==='sn',open=!sec||S.rev['i_'+k],shown=open?(t==='d'?fd(v):v):'•••• '+String(v).slice(-4);
+ return`<div class="kv"><div><span>${esc(l)}</span><br><code>${esc(shown)}</code></div><div class="row">${sec?`<button class="g s" onclick="S.rev['i_${k}']=!S.rev['i_${k}'];render()">${open?'Hide':'Show'}</button>`:''}<button class="g s" onclick="cpI('${k}')">Copy</button></div></div>`}
+function cpI(k){const it=byId(S.id),f=TYPES[it.type].f.find(x=>x[0]===k);copy(String(it[k]),f?f[1]:'Value')}
+function shareText(it){
+ if(!it.type){const net=[netOf(it),it.variant].filter(Boolean).join(' '),L=[[it.bank,it.name].filter(Boolean).join(' ')+(net?' ('+net+')':''),'Card number: '+fmtNum(it.number)];
+  if(it.expiry)L.push('Expiry: '+it.expiry);if(it.holder)L.push('Name on card: '+it.holder);if(CFG.shareCvv&&it.cvv)L.push('CVV: '+it.cvv);return L.join('\n')}
+ const T=TYPES[it.type],L=[T.ttl(it)+(it.type==='bank'?' account'+(it.kind?' ('+it.kind+')':''):'')];
+ T.f.forEach(([k,l,t])=>{if(!it[k]||k==='notes'||k==='kind'||(it.type==='bank'&&k==='bank')||(it.type==='id'&&k==='idtype'))return;L.push(l+': '+(t==='d'?fd(it[k]):it[k]))});return L.join('\n')}
+async function shareItem(id){const it=byId(id);if(!it)return;const title=it.type?TYPES[it.type].ttl(it):[it.bank,it.name].filter(Boolean).join(' ');
+ try{await guard(()=>window.CV?CV.share(title,shareText(it)):(navigator.share?navigator.share({title,text:shareText(it)}):Promise.reject(new Error('unavailable'))))}catch(e){if(!/cancel|abort/i.test(String((e&&e.message)||e)))toast('Couldn’t open the share sheet')}}
+function itemDetailV(it){const T=TYPES[it.type],ph=it.photos||[],full=!!(S.rev.i_acno||S.rev.i_idno);
+ const hero=it.type==='id'?idEl(it,'hero',0,full):it.type==='bank'?acctEl(it,'hero',0,full):genEl(it,'hero',0);
+ const rows=T.f.filter(([k])=>k!=='notes'&&it[k]).map(([k,l,t])=>irow(l,it[k],k,t)).join('');
+ return`<div class="row sp"><button class="ib" aria-label="Back" onclick="S.view='list';render()">${IC.back}</button><div class="row"><button class="ib" aria-label="Share" onclick="shareItem('${it.id}')">${IC.share}</button><button class="g s" onclick="editItem('${it.id}')">Edit</button><button class="ib" aria-label="Lock" onclick="lock(true)">${IC.lock}</button></div></div>
+ ${hero}
+ <h2>Details</h2><div class="card">${rows}${it.notes?`<div class="kv"><div><span>Notes</span><br>${esc(it.notes)}</div></div>`:''}</div>
+ <h2>Photos (${ph.length})</h2>${ph.length?`<div class="ph">${ph.map(p=>`<figure><img src="${p.data}" onclick="zoom('${p.id}')" alt=""><figcaption>${esc(p.label)}</figcaption></figure>`).join('')}</div>`:'<p class="sub" style="margin:0 4px">No photos yet. Tap Edit to attach the front and back.</p>'}
+ <div style="margin-top:30px"><button class="big ${S.del?'d':'g'}" onclick="rm()">${S.del?'Tap again to delete permanently':'Delete'}</button></div>`}
+function fld(d,k,l,t,o){
+ if(k==='bank')return`<label>${l}</label>${comboH('bank',d[k],'e.g. SBI')}`;
+ if(t==='o')return`<label>${l}</label><select onchange="D('${k}',this.value)">${o.map(x=>`<option ${d[k]===x?'selected':''}>${x}</option>`).join('')}</select>`;
+ if(t==='ta')return`<label>${l}</label><textarea rows="2" oninput="D('${k}',this.value)">${esc(d[k])}</textarea>`;
+ if(t==='d')return`<label>${l}</label><input type="date" value="${esc(d[k])}" onchange="D('${k}',this.value)">`;
+ if(k==='ifsc')return`<label>${l}</label><input value="${esc(d[k])}" autocomplete="off" autocapitalize="characters" maxlength="11" oninput="this.value=this.value.toUpperCase();D('${k}',this.value)">`;
+ return`<label>${l}</label><input value="${esc(d[k])}" autocomplete="off" ${t.endsWith('n')?'inputmode="numeric"':''} oninput="D('${k}',this.value)">`}
+const photoBlock=d=>`<h2>Photos (${d.photos.length})</h2>
+ ${d.photos.length?`<div class="ph">${d.photos.map(p=>`<figure><img src="${p.data}" alt=""><button class="x d s" onclick="delPh('${p.id}')">✕</button><figcaption>${esc(p.label)}</figcaption></figure>`).join('')}</div>`:''}
+ <div class="row" style="margin-top:10px"><select id="lbl" class="ctl" style="width:auto"><option>Front</option><option>Back</option><option>Other</option></select><button class="g grow ctl" onclick="scanPhoto()">${IC.cam}Scan</button><button class="g grow ctl" onclick="pickFile('file')">Gallery</button></div><p class="sub" style="margin:8px 4px 0">Scan finds the edges and crops for you.</p>
+ <input id="fileC" type="file" accept="image/*" capture="environment" hidden onchange="addPh(this)"><input id="file" type="file" accept="image/*" multiple hidden onchange="addPh(this)">`;
+function itemEditV(){const d=S.draft,T=TYPES[d.type];
+ return`<div class="row sp"><h1 class="m">${S.isNew?'Add ':'Edit '}${esc(T.noun)}</h1><button class="g s" onclick="cancel()">Cancel</button></div>
+ ${T.f.map(([k,l,t,o])=>fld(d,k,l,t,o)).join('')}
+ ${photoBlock(d)}
+ <div class="err" style="margin-top:12px">${esc(S.err)}</div><div class="bar"><button class="big" onclick="saveItem()">Save</button></div>`}
+async function saveItem(){const d=S.draft,T=TYPES[d.type];if(!String(d[T.req]||'').trim()){S.err='Please fill in '+T.reqL+'.';return render()}
+ S.vault.items=S.vault.items||[];const i=S.vault.items.findIndex(c=>c.id===d.id);if(i<0)S.vault.items.push(d);else S.vault.items[i]=d;
+ try{await persist()}catch(e){S.err='Couldn’t save: storage is full or unavailable.';return render()}
+ S.id=d.id;S.draft=null;S.view='detail';S.rev={};render()}
+
+// ---- card colours ----
+const PAL=['#5b4bff','#1d4f91','#0f766e','#15803d','#b45309','#c2410c','#be123c','#a21caf','#334155','#111827'];
+const setCol=c=>{S.draft.color=c;render()};
+const palH=d=>{const custom=d.color&&!PAL.includes(d.color);return`<div class="pal"><button type="button" class="swc auto ${d.color?'':'sel'}" onclick="setCol('')">Auto</button>${PAL.map(c=>`<button type="button" class="swc ${d.color===c?'sel':''}" style="background:${c}" aria-label="Colour ${c}" onclick="setCol('${c}')"></button>`).join('')}<label class="swc pick ${custom?'sel':''}" style="background:${custom?d.color:'var(--sf2)'}">+<input type="color" value="${d.color||'#5b4bff'}" onchange="setCol(this.value)"></label></div>`};
+const dayOpts=v=>'<option value="">None</option>'+Array.from({length:31},(_,i)=>`<option value="${i+1}" ${String(v)===String(i+1)?'selected':''}>${i+1}</option>`).join('');
+
+// ---- spends, bills, insights ----
+const CATS=['Shopping','Food & dining','Fuel','Travel','Groceries','Bills & utilities','Health','Entertainment','Other'];
+const txOf=cid=>(S.vault.tx||[]).filter(t=>t.cardId===cid);
+function cardSpend12(c){const cut=Date.now()-365*864e5;return txOf(c.id).filter(t=>new Date(t.date).getTime()>cut).reduce((a,t)=>a+(+t.amount||0),0)}
+async function addBill(cid){const c=byId(cid),now=new Date(),v=await sheet('Record a bill for '+(c.name||c.bank),[{id:'m',l:'Month',txt:1,ph:'YYYY-MM',def:now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')},{id:'a',l:'Amount (₹)',txt:1,ph:'e.g. 45000'},{id:'d',l:'Due date (optional)',date:1}],'Save bill');if(!v)return;
+ if(!/^\d{4}-\d{2}$/.test(v.m||''))return toast('Month should look like 2026-11');const amt=String(v.a||'').replace(/\D/g,'');if(!amt)return toast('Enter the bill amount');
+ S.vault.bills=S.vault.bills||[];S.vault.bills.push({id:uid(),cardId:cid,month:v.m,amount:amt,due:v.d||'',paid:false});await persist();render()}
+const bRem=b=>Math.max(0,(+b.amount||0)-(+b.paidAmt||0));
+function applyPay(b,c,a){a=Math.min(bRem(b),Math.round(+a||0));if(a<=0)return 0;b.paidAmt=(+b.paidAmt||0)+a;if(c)c.owed=String(Math.max(0,(+c.owed||0)-a));
+ if(bRem(b)<=0){b.paid=true;b.paidAt=Date.now();if(c)c.lastPaidMonth=(b.due||b.month).slice(0,7)}return a}
+async function payBill(id){const b=(S.vault.bills||[]).find(x=>x.id===id);if(!b)return;const rem=bRem(b);
+ const v=await sheet('Payment for the '+b.month+' bill',[{id:'a',l:'Amount paid (₹). Lower it for a part payment',txt:1,def:String(rem)}],'Save payment');if(!v)return;
+ const a=applyPay(b,byId(b.cardId),String(v.a||'').replace(/[^\d.]/g,''));if(!a)return toast('Enter an amount');
+ await persist();render();toast(b.paid?'Bill paid in full · balance reduced':'Part payment saved · ₹ '+bRem(b).toLocaleString('en-IN')+' left')}
+async function addSpend(cid){const c=byId(cid),today=new Date().toISOString().slice(0,10),v=await sheet('Record a spend on '+(c.name||c.bank),[{id:'a',l:'Amount (₹)',txt:1,ph:'e.g. 1250'},{id:'cat',l:'Category',opts:CATS},{id:'d',l:'Date',date:1,def:today},{id:'n',l:'Note (optional)',txt:1}],'Save spend');if(!v)return;const amt=String(v.a||'').replace(/\D/g,'');if(!amt)return toast('Enter the amount');
+ S.vault.tx=S.vault.tx||[];S.vault.tx.push({id:uid(),cardId:cid,date:v.d||today,amount:amt,cat:v.cat,note:v.n||''});if(c&&c.kind!=='Debit')c.owed=String((+c.owed||0)+(+amt));await persist();render();toast('Spend recorded · balance updated')}
+const insNav=dir=>{const[y,m]=S.im.split('-').map(Number),d=new Date(y,m-1+dir,1);S.im=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');render()};
+function insV(){S.im=S.im||new Date().toISOString().slice(0,7);S.insMode=S.insMode||'sp';
+ const seg=`<div class="seg" style="margin-top:16px"><button class="${S.insMode==='sp'?'on':''}" onclick="S.insMode='sp';render()">Recorded spends</button><button class="${S.insMode==='out'?'on':''}" onclick="S.insMode='out';render()">Outstanding now</button></div>`;
+ const head=`<div class="row"><button class="ib" aria-label="Back" onclick="S.view='list';render()">${IC.back}</button><h1 class="m">Insights</h1></div>`;
+ if(S.insMode==='out'){const cards=S.vault.cards.filter(c=>c.kind!=='Debit');let tot=0,btot=0;
+  const rows=cards.map(c=>{const ow=+c.owed||0;if(ow)tot+=ow;const bl=(S.vault.bills||[]).filter(x=>x.cardId===c.id&&!x.paid),bs=bl.reduce((a,x)=>a+bRem(x),0);if(bs)btot+=bs;if(!ow&&!bs)return'';
+   return`<div class="kv"><div><span>${esc(c.name||c.bank)}</span>${bs?`<small style="display:block;color:var(--mut)">unpaid bill ₹ ${bs.toLocaleString('en-IN')}</small>`:''}</div><code>₹ ${(ow+bs).toLocaleString('en-IN')}</code></div>`}).join('');
+  return head+seg+(rows?`<h2>What you owe right now</h2><div class="card">${rows}<div class="kv"><div><b>Total balance + unpaid bills</b></div><code>₹ ${(tot+btot).toLocaleString('en-IN')}</code></div></div><p class="sub" style="margin:8px 4px 0">Card balances: ₹ ${tot.toLocaleString('en-IN')} · unpaid statement bills: ₹ ${btot.toLocaleString('en-IN')}. Spends add to a card’s balance; marking a bill paid reduces it.</p>`:`<div class="empty"><b>Nothing owed right now</b>Recording or importing a spend adds to a card’s balance; marking a bill paid reduces it.</div>`)}
+ const[y,m]=S.im.split('-').map(Number),tx=(S.vault.tx||[]).filter(t=>(t.date||'').startsWith(S.im)),tot=tx.reduce((a,t)=>a+(+t.amount||0),0);
+ const byCat={},byCard={};tx.forEach(t=>{byCat[t.cat||'Other']=(byCat[t.cat||'Other']||0)+(+t.amount||0);const c=byId(t.cardId),nm=c?(c.name||c.bank):'Deleted card';byCard[nm]=(byCard[nm]||0)+(+t.amount||0)});
+ const cats=Object.entries(byCat).sort((a,b)=>b[1]-a[1]),cards=Object.entries(byCard).sort((a,b)=>b[1]-a[1]);
+ return head+seg+`
+ <div class="row sp" style="margin-top:14px"><button class="ib" aria-label="Previous month" onclick="insNav(-1)">‹</button><h2 style="margin:0">${new Date(y,m-1).toLocaleDateString('en-IN',{month:'long',year:'numeric'})}</h2><button class="ib" aria-label="Next month" onclick="insNav(1)">›</button></div>
+ ${tx.length?`<h2>Total spent</h2><div class="card"><div class="kv"><div><span>${tx.length} transaction${tx.length===1?'':'s'}</span><br><code>₹ ${tot.toLocaleString('en-IN')}</code></div></div></div>
+ <h2>By category</h2><div class="card">${cats.map(([k,v])=>`<div style="padding:10px 0"><div class="row sp"><span>${esc(k)}</span><b>₹ ${v.toLocaleString('en-IN')}</b></div><div class="mtr"><i style="width:${Math.round(v/tot*100)}%"></i></div></div>`).join('')}</div>
+ <h2>By card</h2><div class="card">${cards.map(([k,v])=>`<div class="kv"><div><span>${esc(k)}</span></div><code>₹ ${v.toLocaleString('en-IN')}</code></div>`).join('')}</div>`:`<div class="empty"><b>No spends recorded</b>Open a card and tap "Record spend", or import from notifications in Settings.</div>`}`}
+// ---- profiles ----
+function profAvatar(){const p=(S.vault.profiles||[]).find(q=>q.id===CFG.profile);return p?(p.photo?`<img src="${p.photo}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" alt="">`:esc((p.name||'?')[0].toUpperCase())):IC.prof}
+function profPick(){const ps=S.vault.profiles||[];pickOpt('Profiles',['All profiles',...ps.map(p=>p.name),'Manage profiles','＋ New profile'],x=>{
+ if(x==='All profiles'){CFG.profile='';saveCfg();return render()}
+ if(x==='＋ New profile')return newProfile();
+ if(x==='Manage profiles')return manageProfs();
+ const p=ps.find(q=>q.name===x);if(p){CFG.profile=p.id;saveCfg();render()}})}
+async function newProfile(){const v=await sheet('New profile',[{id:'n',l:'Profile name',txt:1}],'Create');if(!v||!(v.n||'').trim())return;const p={id:uid(),name:v.n.trim(),photo:''};S.vault.profiles=S.vault.profiles||[];S.vault.profiles.push(p);await persist();CFG.profile=p.id;saveCfg();render();pickOpt('Add a photo for '+p.name+'?',['Choose a photo','Skip for now'],x=>{if(x==='Choose a photo')profPhoto(p)})}
+function profPhoto(p){const i=document.createElement('input');i.type='file';i.accept='image/*';S.picking=true;setTimeout(()=>{S.picking=false},120000);i.addEventListener('cancel',()=>{S.picking=false});i.onchange=async()=>{S.picking=false;const f=i.files[0];if(!f)return;try{p.photo=await shrink(f,400);await persist();render()}catch(e){toast('Couldn’t read that image')}};i.click()}
+function manageProfs(){const ps=S.vault.profiles||[];if(!ps.length)return toast('No profiles yet');pickOpt('Manage profiles',ps.map(p=>p.name),n=>{const p=ps.find(q=>q.name===n);if(!p)return;pickOpt(n,['Change photo','Rename','Delete profile'],a=>{
+ if(a==='Change photo')profPhoto(p);
+ else if(a==='Rename')sheet('Rename profile',[{id:'n',l:'New name',txt:1,def:p.name}],'Rename').then(v=>{if(v&&v.n.trim()){p.name=v.n.trim();persist().then(render)}});
+ else{S.vault.profiles=ps.filter(q=>q.id!==p.id);
+  S.vault.cards.forEach(c=>{if(c.pid===p.id)c.pid=''});(S.vault.items||[]).forEach(c=>{if(c.pid===p.id)c.pid=''});
+  if(CFG.profile===p.id)CFG.profile='';saveCfg();persist().then(render);toast('Profile deleted')}})})}
+
+// ---- recycle bin ----
+function toastUndo(t,fn){const e=document.createElement('div');e.className='toast';e.style.display='flex';e.style.gap='14px';e.style.alignItems='center';e.textContent=t;const b=document.createElement('button');b.className='s';b.style.cssText='padding:6px 14px;background:var(--acc);color:var(--on)';b.textContent='Undo';b.onclick=async()=>{clearTimeout(tm);e.remove();await fn()};e.appendChild(b);document.body.appendChild(e);const tm=setTimeout(()=>e.remove(),6000)}
+function binV(){const bin=S.vault.bin||[];return`<div class="row"><button class="ib" aria-label="Back" onclick="S.setSub='';render()">${IC.back}</button><h1 class="m">Recycle bin</h1></div>
+<p class="sub" style="margin:0 4px 10px">Deleted items stay here for 30 days, then they are removed forever.</p>
+${bin.length?`<div class="card">${bin.map(b=>`<div class="lrow"><div class="grow"><b>${esc(b.type?TYPES[b.type].ttl(b):[b.bank,b.name].filter(Boolean).join(' '))}</b><small>${b.type?TYPES[b.type].tab:'Card'} · deleted ${new Date(b.deletedAt).toLocaleDateString('en-IN')}</small></div><button class="g s" onclick="binRestore('${b.id}')">Restore</button><button class="ib" style="width:36px;height:36px" aria-label="Delete forever" onclick="binPurge('${b.id}')">${IC.x}</button></div>`).join('')}</div>
+<div style="margin-top:24px"><button class="big d" onclick="binEmpty()">${S.binSure?'Tap again to empty the recycle bin':'Empty recycle bin'}</button></div>`:`<div class="empty"><b>Recycle bin is empty</b>Deleted cards and items will appear here.</div>`}`}
+async function binRestore(id){const b=(S.vault.bin||[]).find(x=>x.id===id);if(!b)return;S.vault.bin=S.vault.bin.filter(x=>x.id!==id);const home=b.type?(S.vault.items=S.vault.items||[]):S.vault.cards;if(!home.some(x=>x.id===id))home.push(b);delete b.deletedAt;await persist();render();toast('Restored')}
+async function binPurge(id){S.vault.bin=(S.vault.bin||[]).filter(x=>x.id!==id);await persist();render()}
+async function binEmpty(){if(!S.binSure){S.binSure=true;render();return toast('Tap again to confirm')}S.vault.bin=[];S.binSure=false;await persist();render()}
+
+// ---- cloud backup via share sheet ----
+async function shareBackup(){return expEnc()}
+
+// ---- transaction reader (notification access) ----
+const CATK=[['swiggy|zomato|cafe|restaurant|domino|kfc|food','Food & dining'],['petrol|diesel|fuel|hpcl|bpcl|indian oil|gass|gas station','Fuel'],['flight|irctc|train|hotel|ola|uber|rapido|redbus|makemytrip|travel|indigo','Travel'],['grocery|blinkit|zepto|bigbasket|dmart|grocer','Groceries'],['amazon|flipkart|myntra|mall|store|shopping','Shopping'],['bill|electric|recharge|dth|broadband|postpaid|utility','Bills & utilities'],['hospital|pharmacy|medical|apollo|health','Health'],['movie|netflix|bookmyshow|entertain','Entertainment']];
+const guessCat=m=>{const s=(m||'').toLowerCase();for(const[k,c]of CATK)if(new RegExp(k).test(s))return c;return'Other'};
+function ntx(){return(window.CV&&CV.isNative&&CV.ntx)?CV.ntx():null}
+async function notifGrant(){const p=ntx();if(!p)return toast('Only in the Android app');try{await p.openSettings();S.notifOK=false;setTimeout(async()=>{try{S.notifOK=(await p.status()).granted}catch(e){}render()},1500)}catch(e){toast('Couldn’t open settings')}}
+function parseNotif(n){const t=((n.title||'')+' '+(n.text||''));const m=t.match(/(?:rs\.?|₹|inr)\s*([\d,]+(?:\.\d{1,2})?)/i);if(!m)return null;const amount=Math.round(parseFloat(m[1].replace(/,/g,'')));if(!amount)return null;
+ const card=t.match(/\b(?:x{1,4}|\*{1,4})\s*(\d{4})\b/i)||t.match(/\b(?:ending|card|a\/c)\s*(?:with\s*)?(?:no\.?\s*)?(\d{4})\b/i);
+ const mm=t.match(/\b(?:at|to|towards|@)\s+([A-Za-z0-9&.' -]{3,28}?)(?=\s+(?:on|using|via|ref|upi|txn|trxn|with|from|for|card|avl|bal|if)\b|[.,;]|$)/i);const merchant=(mm?mm[1]:String(n.title||'')).trim().slice(0,28);
+ return{amount,merchant,last4:card?card[1]:'',when:n.at?new Date(n.at).toLocaleDateString('en-IN'):'',at:n.at||0,k:amount+'|'+merchant+'|'+(n.at||'')}}
+async function notifPull(){const p=ntx();if(!p)return toast('Only in the Android app');let r;try{r=await p.pull()}catch(e){return toast('Reader not available')}S.notifOK=true;
+ const its=(r&&r.items)||[],ns=ingestStubs(its),n=ingestNotifs(its);if(n||ns)await persist();render();
+ if((S.vault.pend||[]).length)return reviewPend();if(ns)return reviewStubs();toast('No new transaction or card notifications')}
+function spendConfirm(c){const cards=S.vault.cards.filter(x=>x.kind!=='Debit');const match=cards.find(x=>last4(x.number)===c.last4);
+ if(match)return saveSpend(match.id,c);
+ if(cards.length===1)return saveSpend(cards[0].id,c);
+ if(!cards.length)return toast('Add a card first');
+ const labels=cards.map(x=>(x.name||x.bank)+' '+mask(x.number));
+ pickOpt('Which card?',labels,x=>{const cd=cards[labels.indexOf(x)];if(cd)saveSpend(cd.id,c)})}
+function addTx(card,c){S.vault.tx=S.vault.tx||[];S.vault.tx.push({id:uid(),cardId:card.id,date:(c.at?new Date(c.at):new Date()).toISOString().slice(0,10),amount:String(c.amount),cat:guessCat(c.merchant),note:(c.merchant||'')+(c.last4?' · •••• '+c.last4:'')||'Imported',k:c.k||''});if(card.kind!=='Debit')card.owed=String((+card.owed||0)+(+c.amount))}
+async function saveSpend(cid,c){const cd=byId(cid);if(!cd)return;addTx(cd,c);if(c.k)S.vault.pend=(S.vault.pend||[]).filter(p=>p.k!==c.k);await persist();render();toast('Spend imported · balance updated')}
+function ingestNotifs(items){S.vault.pend=S.vault.pend||[];const known=new Set([...(S.vault.tx||[]).map(t=>t.k).filter(Boolean),...S.vault.pend.map(p=>p.k)]);let n=0;
+ for(const it of items){if(parseCardAlert(it))continue;const c=parseNotif(it);if(!c||known.has(c.k))continue;if(S.vault.pend.some(p=>p.amount===c.amount&&p.last4===c.last4&&Math.abs((p.at||0)-(c.at||0))<6e5))continue;known.add(c.k);S.vault.pend.push(c);n++}
+ S.vault.pend=S.vault.pend.slice(-30);return n}
+async function autoPull(silent){if(CFG.autoPull===false||!S.vault)return;const p=ntx();if(!p)return;try{const st=await p.status();S.notifOK=st.granted;if(!st.granted)return;const r=await p.pull();const its=(r&&r.items)||[];const n=ingestNotifs(its)+ingestStubs(its);if(n){await persist();if(S.view==='list')render();if(!silent)toast(n+' new transaction alert'+(n===1?'':'s'))}}catch(e){}}
+const stubList=()=>((S.vault&&S.vault.stubs)||[]).filter(x=>!S.vault.cards.some(c=>last4(c.number)===x.last4));
+const pendNote=()=>{const n=((S.vault&&S.vault.pend)||[]).length,sl=S.vault?stubList():[];return(sl.length?`<div class="note tap" onclick="reviewStubs()">${sl.length} new card${sl.length===1?'':'s'} detected. Tap to add</div>`:'')+(n?`<div class="note tap" onclick="reviewPend()">${n} new transaction alert${n===1?'':'s'} found. Tap to review</div>`:'')};
+function reviewPend(){const L=S.vault.pend||[];if(!L.length)return;const labels=L.map(c=>`₹ ${Number(c.amount).toLocaleString('en-IN')}${c.merchant?' · '+c.merchant:''}${c.last4?' · •••• '+c.last4:''}${c.when?' · '+c.when:''}`);
+ pickOpt('New transaction alerts',[...labels,'Add all that match a card','Dismiss all'],x=>{if(x==='Dismiss all'){S.vault.pend=[];persist().then(render);return}if(x==='Add all that match a card')return addAllPend();const i=labels.indexOf(x);if(i>=0)spendConfirm(L[i])})}
+async function addAllPend(){const cards=S.vault.cards.filter(x=>x.kind!=='Debit');let n=0;const keep=[];
+ for(const p of S.vault.pend||[]){const m=p.last4?cards.find(x=>last4(x.number)===p.last4):(cards.length===1?cards[0]:null);if(m){addTx(m,p);n++}else keep.push(p)}
+ S.vault.pend=keep;await persist();render();toast(n?n+' spend'+(n===1?'':'s')+' added'+(keep.length?' · '+keep.length+' still need a card':''):'No alert matched a card')}
+
+// ---- reminders ----
+function remList(){const out=[],now=Date.now(),lead=CFG.lead*864e5,T=new Date(),at9=(y,m,d)=>new Date(y,m,d,9,0,0).getTime();
+ const dom=(y,m,d)=>at9(y,m,Math.min(d,new Date(y,m+1,0).getDate()));
+ const add=(t,body)=>{if(t>now)out.push({at:t,title:'Vaultly reminder',body})};
+ for(const c of S.vault.cards.filter(x=>!x.blocked)){const nm=c.name||c.bank;
+  for(const[k,txt]of[['billDay','bill is due'],['stmtDay','statement is generated']]){const d=+c[k];if(!d)continue;
+   for(let i=0;i<5;i++){const dt=new Date(T.getFullYear(),T.getMonth()+i,1),ym=dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0');if(k==='billDay'&&c.lastPaidMonth===ym)continue;add(dom(dt.getFullYear(),dt.getMonth(),d)-lead,`${nm} ${txt} ${CFG.lead?'in '+CFG.lead+(CFG.lead===1?' day':' days'):'today'}`)}}
+  if(c.feeDate){const[y,m,d]=c.feeDate.split('-').map(Number);if(m&&d)for(let i=0;i<2;i++)add(at9(T.getFullYear()+i,m-1,d)-7*864e5,`${nm} annual fee is due on ${String(d).padStart(2,'0')}/${String(m).padStart(2,'0')}`)}}
+ for(const it of(S.vault.items||[])){if(it.type==='id'&&it.expiry){const[y,m,d]=it.expiry.split('-').map(Number);if(y)add(at9(y,m-1,d)-30*864e5,`${it.idtype} expires on ${fd(it.expiry)}`)}
+  if(it.type==='ins'&&it.renew){const[y,m,d]=it.renew.split('-').map(Number);if(y)add(at9(y,m-1,d)-30*864e5,`${TYPES.ins.ttl(it)} renews on ${fd(it.renew)}`)}
+  if(it.type==='veh'){for(const[k,l]of[['insExp','insurance expires'],['pucExp','PUC expires']]){const v=it[k];if(!v)continue;const[y,m,d]=v.split('-').map(Number);if(y)add(at9(y,m-1,d)-30*864e5,`${it.maker||it.reg||'Vehicle'} ${l} on ${fd(v)}`)}}}
+ return out.sort((a,b)=>a.at-b.at)}
+async function syncRem(){if(!window.CV||!S.vault)return;try{await CV.notify(CFG.rem?remList():[])}catch(e){}}
+
+// ---- change master password ----
+async function chgPw(){const v=await sheet('Change master password',[{id:'o',l:'Current password'},{id:'n',l:'New password (8+ characters)'},{id:'n2',l:'Confirm new password'}],'Change');if(!v)return;
+ if(v.n.length<8||v.n!==v.n2)return toast('New passwords must match and be 8+ characters');
+ try{await checkPw(v.o)}catch(e){return toast('Current password is wrong')}
+ const oK=S.key,oS=S.salt;try{S.salt=crypto.getRandomValues(new Uint8Array(16));S.key=await derive(v.n,S.salt);await persist()}catch(e){S.key=oK;S.salt=oS;return toast('Couldn’t change the password')}
+ let note='Password changed';
+ if(CFG.bio){try{S.picking=true;await CV.bioEnroll(v.n)}catch(e){CFG.bio=false;saveCfg();note+='. Turn biometric unlock back on'}S.picking=false}
+ if(CFG.pin){await killPin();note+='. Set your PIN again'}
+ toast(note);render()}
+
+// ---- NFC tap-to-read ----
+async function tapCard(){if(!(window.CV&&CV.isNative))return toast('NFC works in the Android app');
+ const a=await CV.nfcAvail();if(!a.available)return toast('This phone has no NFC');if(!a.enabled)return toast('Turn on NFC in your phone settings');
+ const o=document.createElement('div');o.className='view sh';o.innerHTML=`<div class="sheet" style="text-align:center"><h1 class="m">Tap your card</h1><p class="sub" style="margin:10px 0 20px">Hold the card flat against the back of your phone, near the top, and keep it still.</p><button class="g big" id="nfcx">Cancel</button></div>`;
+ document.body.appendChild(o);let stop=false,why='';const t=setTimeout(()=>{why='No card detected';$('#nfcx')&&$('#nfcx').click()},30000);
+ $('#nfcx').onclick=()=>{stop=true;clearTimeout(t);CV.nfcCancel();o.remove();if(why)toast(why)};
+ try{const r=await CV.nfcRead();if(stop)return;clearTimeout(t);o.remove();fillTap(r)}catch(e){if(stop)return;clearTimeout(t);o.remove();toast(String((e&&e.message)||e).slice(0,90))}}
+function fillTap(r){const d=S.draft;d.number=r.number;if(r.expiry)d.expiry=r.expiry;if(r.holder&&!d.holder)d.holder=r.holder;if(!d.netSet)d.network=brand(r.number)||d.network;toast('Card read. The CVV isn’t on the chip, so type it in.');render()}
+
+// ---- bank / variant picker ----
+const BANKLIST=[...new Set([...Object.keys(BANKS),'Yes Bank','PNB','Bank of Baroda','Canara','Union Bank','Federal','RBL','AU Small Finance','HSBC','Standard Chartered','Bandhan','IDBI'])];
+const comboH=(k,v,ph)=>`<div class="combo"><input value="${esc(v)}" placeholder="${esc(ph)}" oninput="D('${k}',this.value)"><button type="button" class="cb" aria-label="Choose from list" onclick="pickField('${k}')">${IC.chev}</button></div>`;
+function pickOpt(title,opts,cb){const o=document.createElement('div');o.className='view sh';
+ o.innerHTML=`<div class="sheet" style="max-height:75vh;display:flex;flex-direction:column"><h1 class="m">${esc(title)}</h1><div style="overflow-y:auto;margin:10px -8px 0;flex:1">${opts.map((x,i)=>`<div class="li" data-i="${i}" style="padding:14px 8px">${esc(x)}</div>`).join('')}</div><button class="g big" id="sh_c" style="margin-top:12px">Cancel</button></div>`;
+ document.body.appendChild(o);o.querySelector('#sh_c').onclick=()=>o.remove();
+ o.querySelectorAll('.li').forEach(e=>{e.onclick=()=>{o.remove();cb(opts[+e.dataset.i])}})}
+function pickField(k){const v=k==='variant';pickOpt(v?'Variant':'Bank',v?VARLIST:BANKLIST,x=>{D(k,x);render()})}
+
+// ---- themes ----
+const THEMES=[['auto','Auto','linear-gradient(135deg,#eceef5 50%,#0c0e18 50%)','#888'],['light','Light','#eceef5','#25203a'],['dark','Dark','#0c0e18','#eef0fa'],['black','Black','#000','#f4f4f5'],
+ ['aurora','Aurora','linear-gradient(160deg,#0f0c29,#302b63 55%,#1b1b3a)','#fff'],['ocean','Ocean','linear-gradient(160deg,#0b1f2a,#12404a 55%,#0f5e63)','#fff'],
+ ['sunset','Sunset','linear-gradient(160deg,#ff7a59,#e8457c 50%,#7b3fe4)','#fff'],['candy','Candy','linear-gradient(135deg,#a8edea,#fed6e3 55%,#d9c2ff)','#25203a']];
+const GLASS=['aurora','ocean','sunset','candy'];
+const ACCS=['#5b4bff','#2563eb','#0d9488','#16a34a','#ea580c','#e11d48','#c026d3'];
+const onFor=h=>{const n=parseInt(h.slice(1),16),r=n>>16,g=(n>>8)&255,b=n&255;return(0.299*r+0.587*g+0.114*b)>150?'#16113a':'#ffffff'};
+const DARKT=['dark','black','aurora','ocean','sunset'];
+function isDark(){const t=CFG.theme||'auto';if(t==='auto')return !!(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);return DARKT.includes(t)}
+function applyTheme(){const r=document.documentElement;if(!r)return;
+ if(CFG.theme&&CFG.theme!=='auto')r.dataset.theme=CFG.theme;else delete r.dataset.theme;
+ if(GLASS.includes(CFG.theme))r.dataset.glass='1';else delete r.dataset.glass;
+ if(CFG.acc){r.style.setProperty('--acc',CFG.acc);r.style.setProperty('--on',onFor(CFG.acc))}else{r.style.removeProperty('--acc');r.style.removeProperty('--on')}
+ if(window.CV)CV.bars(isDark())}
+const setTheme=k=>{CFG.theme=k;saveCfg();applyTheme();render()};
+const setAcc=c=>{CFG.acc=c;saveCfg();applyTheme();render()};
+try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',applyTheme)}catch(e){}
+applyTheme();
+
+// ---- app icon ----
+const ICONS=[['default','Vaultly'],['black','Black'],['mono','Mono'],['ice','Ice'],['rose','Rose'],['aurora','Aurora'],['sunset','Sunset'],['emerald','Emerald']];
+async function setIcon(k){try{await CV.iconSet(k);S.icon=k;toast('Icon changed. Give your launcher a few seconds');render()}catch(e){toast('Couldn’t change the icon')}}
+
+// ---- automatic backup to a chosen folder ----
+const BK_FREQ=[[0,'Off'],[1,'Every day'],[3,'Every 3 days'],[7,'Every week']];
+const bkSrc=()=>S.bkSrc?S.bkSrc():dbGet('vault');
+async function refreshBk(){try{const st=await CV.bkStatus();S.bkName=st.set?(st.name||'Folder chosen'):''}catch(e){S.bkName=''}}
+async function autoBackup(force){if(!window.CV||!CV.isNative||!S.key||S.bkBusy)return;if(!force&&!(CFG.bkDays>0))return;
+ if(!force&&Date.now()-(CFG.bkLast||0)<CFG.bkDays*864e5-36e5)return;S.bkBusy=true;
+ try{const st=await CV.bkStatus();if(!st.set){CFG.bkErr='No backup folder is set.';saveCfg();if(force)toast('Choose a backup folder first');return}
+  const d=new Date().toISOString().slice(0,10);await CV.bkWrite('vaultly-backup-'+d+'.cvault',JSON.stringify(await bkSrc()),CFG.bkKeep||7);
+  CFG.bkLast=Date.now();CFG.lastBackup=CFG.bkLast;CFG.bkErr='';saveCfg();if(force)toast('Backup saved to your folder')}
+ catch(e){CFG.bkErr='The backup folder isn’t available.';saveCfg();if(force)toast(CFG.bkErr+' Choose it again.')}
+ finally{S.bkBusy=false}if(S.view==='set')render()}
+async function bkPick(){try{await guard(async()=>{const r=await CV.bkChoose();S.bkName=r.name||'Folder chosen';if(!(CFG.bkDays>0))CFG.bkDays=1;CFG.bkErr='';saveCfg()});await autoBackup(true)}catch(e){if(!/cancel/i.test(String((e&&e.message)||e)))toast('Couldn’t use that folder')}render()}
+
+
+// ---- long-press menu, quick preview, lost card ----
+let lpT=0,lpX=0,lpY=0,lpAt=0;
+document.addEventListener('touchstart',e=>{const t=e.target.closest&&e.target.closest('.cc[data-cid]');if(!t||t.classList.contains('hero')||S.view!=='list'||S.tab!=='cards')return;const q=e.touches[0];lpX=q.clientX;lpY=q.clientY;clearTimeout(lpT);lpT=setTimeout(()=>{lpAt=Date.now();vib(25);cardMenu(t.dataset.cid)},520)},{passive:true});
+document.addEventListener('touchmove',e=>{const q=e.touches[0];if(q&&(Math.abs(q.clientX-lpX)>10||Math.abs(q.clientY-lpY)>10))clearTimeout(lpT)},{passive:true});
+['touchend','touchcancel'].forEach(n=>document.addEventListener(n,()=>clearTimeout(lpT),{passive:true}));
+document.addEventListener('click',e=>{if(Date.now()-lpAt<700){e.stopPropagation();e.preventDefault()}},true);
+document.addEventListener('contextmenu',e=>{if(e.target.closest&&e.target.closest('.cc[data-cid]'))e.preventDefault()});
+function cardMenu(id){const c=byId(id);if(!c)return;const t=[c.bank,c.name].filter(Boolean).join(' ')||'Card';
+ const O=['Quick preview','Open details','Share','Copy card number',c.fav?'Remove from favourites':'Make a favourite',c.blocked?'Blocked card options':'Lost or stolen?','Edit','Move to recycle bin'];
+ pickOpt(t,O,async x=>{
+  if(x===O[0])return quickView(id);if(x===O[1])return open_(id);if(x===O[2])return shareItem(id);
+  if(x===O[3])return copy(String(c.number).replace(/\D/g,''),'Card number');
+  if(x===O[4]){c.fav=!c.fav;await persist();return render()}
+  if(x===O[5])return lostCard(id);if(x===O[6])return editCard(id);
+  if(x===O[7])return pickOpt('Move this card to the recycle bin?',['Yes, move it','Cancel'],y=>{if(y==='Yes, move it'){S.id=id;S.del=true;rm()}})})}
+function quickView(id){const c=byId(id);if(!c)return;closeZoom();const v=document.createElement('div');v.className='view';v.id='zoomv';let full=false;
+ const facts=[c.limit?'Limit ₹ '+Number(c.limit).toLocaleString('en-IN'):'',c.expiry?'Expires '+c.expiry:'',c.owed?'Owed ₹ '+Number(c.owed).toLocaleString('en-IN'):''].filter(Boolean).join('  ·  ');
+ const draw=()=>{v.innerHTML=`<div class="qp">${cardEl(c,'hero',0,full)}<div class="row" style="gap:8px;margin-top:14px"><button class="g grow" id="qs">${full?'Hide number':'Show number'}</button><button class="grow" id="qc">Copy number</button></div><p class="sub" style="text-align:center;color:#fff;opacity:.85;margin-top:12px">${esc(facts)}</p></div><button class="ib zx" aria-label="Close" onclick="closeZoom()">${IC.x}</button>`;
+  v.querySelector('#qs').onclick=()=>{full=!full;draw()};v.querySelector('#qc').onclick=()=>copy(String(c.number).replace(/\D/g,''),'Card number')};
+ draw();v.onclick=e=>{if(e.target===v)closeZoom()};document.body.appendChild(v)}
+function lostCard(id){const c=byId(id);if(!c)return;const num=(c.helpline||'').trim(),bk=c.bank||'the bank';
+ const steps=['1. Block the card now','2. Check your recent transactions','3. Report anything you don’t recognise','4. Order a replacement card','5. Update autopay, wallets and subscriptions'];
+ const O=[num?'Call '+bk+' ('+num+')':'Save '+bk+'’s helpline number',...(num?['Change the helpline number']:[]),c.blocked?'Mark this card as active again':'Mark this card as blocked',...steps];
+ pickOpt('Lost or stolen? '+(c.name||c.bank),O,async x=>{
+  if(x===O[0]&&num){location.href='tel:'+num.replace(/[^\d+]/g,'');return}
+  if(x===O[0]||x==='Change the helpline number'){const v=await sheet(bk+' helpline',[{id:'n',l:'Helpline number',txt:1,def:c.helpline||''}],'Save');if(v&&v.n.trim()){c.helpline=v.n.trim();await persist();toast('Helpline saved');render()}return}
+  if(x.startsWith('Mark this card')){if(c.blocked)delete c.blocked;else c.blocked=Date.now();await persist();render();toast(c.blocked?'Marked as blocked. Its reminders are off':'Card is active again')}})}
+// ---- search everything ----
+const GS_SKIP=/pass|pin|cvv|secret|photo|^bg$|^id$|^type$|created|deleted|key|owed|lounge|bill|pid|color|helpline/i;
+function gsOpen(){S.view='gs';S.gq='';render()}
+function gsV(){return`<div class="row" style="gap:10px"><button class="ib" aria-label="Back" onclick="S.view='list';render()">${IC.back}</button><input id="gsq" class="srch" style="margin:0;flex:1" placeholder="Search cards, accounts, IDs, notes…" autofocus autocomplete="off" oninput="gsRun(this.value)" value="${esc(S.gq||'')}"></div><div id="gsr" style="margin-top:14px">${gsList(S.gq||'')}</div>`}
+function gsRun(v){S.gq=v;const e=$('#gsr');if(e)e.innerHTML=gsList(v)}
+function gsList(q){q=(q||'').trim().toLowerCase();if(q.length<2)return'<p class="sub" style="margin:24px 4px">Type at least 2 characters to search across everything.</p>';
+ const ok=o=>(!CFG.profile||!o.pid||o.pid===CFG.profile),hit=o=>Object.entries(o).some(([k,v])=>typeof v==='string'&&!GS_SKIP.test(k)&&v.toLowerCase().includes(q))||(o.number&&last4(o.number).includes(q));
+ const rows=[];
+ S.vault.cards.filter(c=>ok(c)&&hit(c)).forEach(c=>rows.push({id:c.id,tab:'cards',t:[c.bank,c.name].filter(Boolean).join(' '),s:(netOf(c)?netOf(c)+' ':'')+(c.variant||'')+' •••• '+last4(c.number),l:'Card'}));
+ (S.vault.items||[]).filter(i=>ok(i)&&hit(i)).forEach(i=>{const T=TYPES[i.type]||{};rows.push({id:i.id,tab:i.type,t:(T.ttl?T.ttl(i):(i.title||i.bank||i.site||i.provider||i.type))||'Item',s:T.sub?T.sub(i):'',l:T.tab||i.type})});
+ if(!rows.length)return'<div class="empty"><b>No matches</b>Try another word or the last 4 digits.</div>';
+ return`<div class="card">${rows.slice(0,40).map(r=>`<div class="kv" style="cursor:pointer" onclick="gsGo('${r.id}','${r.tab}')"><div><b>${esc(r.t)}</b><br><span>${esc(r.s)}</span></div><span>${esc(r.l)}</span></div>`).join('')}</div>`}
+function gsGo(id,tab){S.tab=tab;S.q='';open_(id)}
+// ---- test a backup file ----
+async function testBackup(inp){S.picking=false;const f=inp.files[0];inp.value='';if(!f)return;let j;
+ try{j=JSON.parse(await f.text())}catch(e){return pickOpt('Backup test',['This isn’t a Vaultly backup file.'],()=>{})}
+ if(!(j&&j.salt&&j.iv&&j.ct))return pickOpt('Backup test',['This isn’t an encrypted Vaultly backup. It may be a Bitwarden file.'],()=>{});
+ const v=await sheet('Backup password',[{id:'pw',l:'Password used for this backup'}],'Check');if(!v)return;
+ try{const d=JSON.parse(dec.decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(j.iv)},await derive(v.pw,unb64(j.salt)),unb64(j.ct))));
+  const n=a=>(a||[]).length;pickOpt('This backup is good',['Opens correctly with that password',n(d.cards)+' cards',n(d.items)+' accounts, IDs, notes and other items',n(d.tx)+' recorded spends',n(d.profiles)+' extra profiles','Nothing was changed on this phone'],()=>{})}
+ catch(e){pickOpt('Backup test',['Couldn’t open it. The password may be wrong or the file damaged.'],()=>{})}}
+// ---- new-card detection from alerts or shared text ----
+const NETMAP={visa:'Visa',mastercard:'Mastercard','master card':'Mastercard',rupay:'RuPay',amex:'Amex','american express':'Amex',diners:'Diners'};
+function parseCardAlert(n){const t=((n.title||'')+' '+(n.text||'')).replace(/\s+/g,' ').trim(),tl=t.toLowerCase();
+ if(!/card/.test(tl)||!/(dispatch|despatch|activat|deliver|issued|approved|welcome|credit limit|limit of|new card|sent via)/.test(tl))return null;
+ const m=t.match(/(?:ending(?: with| in)?|ends(?: with| in)?|no\.?|number|xx+|x{2,}|\*{2,}|•{2,})\s*(\d{4})\b/i);if(!m)return null;
+ const bm=t.match(/\b(HDFC|ICICI|Axis|SBI|Kotak|IndusInd|IDFC(?: FIRST)?|Yes Bank|RBL|Federal|PNB|Bank of Baroda|Canara|HSBC|Standard Chartered|American Express|Amex|Citi|OneCard|Slice|Jupiter)\b/i);
+ const lim=t.match(/(?:credit limit|limit)[^\d₹]{0,25}(?:₹|rs\.?|inr)?\s*([\d,]{4,10})/i),nt=(t.match(/\b(visa|mastercard|master card|rupay|amex|american express|diners)\b/i)||[])[1];
+ const nm=(t.match(/\b([A-Z][A-Za-z0-9&]+(?: [A-Z][A-Za-z0-9&]+){0,3}) (?:Credit|Debit) Card\b/)||[])[1]||'';
+ let name=nm.replace(/^(?:Your|The|New|Congratulations!?)\s+/i,'');if(bm){const ix=nm.toLowerCase().indexOf(bm[1].toLowerCase());if(ix>=0)name=nm.slice(ix+bm[1].length).replace(/^\s*Bank\s+/i,'').trim()}
+ return{k:'card|'+m[1]+'|'+(bm?bm[1].toLowerCase():''),last4:m[1],bank:bm?bm[1].toUpperCase()==='HDFC'||bm[1].toUpperCase()==='ICICI'||bm[1].toUpperCase()==='SBI'?bm[1].toUpperCase():bm[1]:'',name,limit:lim?lim[1].replace(/,/g,''):'',kind:/debit card/i.test(t)?'Debit':'Credit',network:nt?(NETMAP[nt.toLowerCase()]||''):'',at:n.at||Date.now()}}
+function ingestStubs(items){S.vault.stubs=S.vault.stubs||[];let n=0;for(const it of items){const c=parseCardAlert(it);if(!c)continue;if(S.vault.cards.some(x=>last4(x.number)===c.last4)||S.vault.stubs.some(x=>x.k===c.k))continue;S.vault.stubs.push(c);n++}S.vault.stubs=S.vault.stubs.slice(-10);return n}
+function reviewStubs(){const L=stubList();if(!L.length)return;const labels=L.map(x=>`${x.bank||'New card'} ${x.name||''} •••• ${x.last4} (${x.kind})`.replace(/\s+/g,' '));
+ pickOpt('New cards detected',[...labels,'Dismiss all'],x=>{if(x==='Dismiss all'){S.vault.stubs=[];persist().then(render);return}const i=labels.indexOf(x);if(i>=0)stubAdd(L[i])})}
+function stubAdd(x){S.draft=blank();Object.assign(S.draft,{bank:x.bank||'',name:x.name||'',number:x.last4,kind:x.kind,limit:x.limit||'',network:x.network||'',netSet:!!x.network,notes:'Ends '+x.last4+'. Add the full number with Scan or Tap card.'});S.isNew=true;S.err='';S.view='edit';render();scrollTo(0,0)}
+async function checkShared(){if(!window.CV||!S.vault||!CV.sharedText)return;const tx=await CV.sharedText();if(!tx)return;const n={title:'',text:tx,at:Date.now()};
+ const ns=ingestStubs([n]),np=ingestNotifs([n]);if(ns||np){await persist();render();toast(ns?'Card details found. Tap the banner to add it':'Spend found. Tap the banner to review')}else toast('Couldn’t find card or spend details in that text')}
+
+(async()=>{try{S.exists=!!(await dbGet('vault'))}catch(e){}if(window.CV){S.bioOK=await CV.bioAvailable();CV.setSecure(!CFG.shots);const ai=await CV.appInfo();if(ai)S.ver=ai.version;S.icon=await CV.iconGet();await refreshBk();if(CV.onResume)CV.onResume(()=>{if(S.key)checkShared()});applyTheme()}initMode();render();autoBio();
+ (async()=>{try{if(ntx())S.notifOK=(await ntx().status()).granted}catch(e){}})()})();
+</script></body></html>

@@ -1,0 +1,6 @@
+{
+  "name": "Vaultly v2.0 — Private Card & Identity Vault",
+  "description": "Upgraded offline AES-256-GCM financial vault with smart card reward recommender, offline lounge auto-fill, TOTP 2FA authenticator, EMI tracker, decoy vault, and architecture audit.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
