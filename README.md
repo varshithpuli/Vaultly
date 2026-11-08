@@ -164,6 +164,53 @@ npm run build
 
 ---
 
+## 📱 How to Generate & Install Android APK
+
+Vaultly can be installed on Android in three easy ways:
+
+### Method 1: Automated Cloud Build via GitHub Actions (Recommended)
+You don't need Android Studio, Java, or the Android SDK installed on your computer!
+1. Push this repository to your GitHub account (`git push -u origin main`).
+2. Go to your repository on GitHub and click the **Actions** tab.
+3. You will see the **Build Android APK** workflow running automatically.
+4. Once completed (approx. 2–3 minutes), click on the workflow run.
+5. Under **Artifacts**, download **`Vaultly-v2.0-debug-apk`**.
+6. Transfer the `.apk` file to your Android phone and tap to install! (Allow "Install Unknown Apps" in phone settings if prompted).
+
+### Method 2: Local Build using Android Studio / Capacitor CLI
+If you have Node.js, Java JDK 17, and Android Studio installed locally:
+
+```bash
+# 1. Build the web production bundle
+npm run build
+
+# 2. Install Capacitor packages (if not already installed)
+npm install @capacitor/core @capacitor/cli @capacitor/android
+
+# 3. Add the Android native platform (first time only)
+npx cap add android
+
+# 4. Sync web assets into the Android native project
+npx cap sync android
+
+# 5. Build the APK directly via Gradle CLI:
+cd android
+./gradlew assembleDebug
+
+# Your ready-to-install APK will be located at:
+# android/app/build/outputs/apk/debug/app-debug.apk
+
+# Alternatively, open in Android Studio to build a signed release APK:
+npx cap open android
+```
+
+### Method 3: Instant Progressive Web App (PWA) Install (Zero APK needed)
+1. Open the hosted Vaultly URL in Google Chrome or Brave on your Android phone.
+2. Tap the browser menu (`⋮`) and select **"Install App"** (or **"Add to Home Screen"**).
+3. Vaultly will be installed directly on your home screen as a standalone, fullscreen native-like app that works 100% offline with zero cloud connection.
+
+---
+
 ## Project Structure
 
 ```text
