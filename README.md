@@ -14,28 +14,47 @@ Vaultly is a privacy-first, zero-knowledge personal finance and credential vault
 
 ## Highlights in Vaultly v2.0
 
-### 1. Expanded Bank & Card Catalog (18 Major Cards Offline)
-* **Pre-configured Offline Catalog**: 18 popular Indian & global cards across Visa, Mastercard, RuPay, and American Express:
-  * **HDFC**: Infinia Metal, Regalia Gold, Millennia, Tata Neu Infinity RuPay
-  * **SBI Card**: Cashback Card, Elite
-  * **Axis Bank**: Atlas, Magnus Burgundy, Airtel Axis
-  * **ICICI Bank**: Amazon Pay, Sapphiro, Emeralde Private Metal
-  * **American Express**: Platinum Travel, The Platinum Card
-  * **Kotak Mahindra**: White Reserve
-  * **IndusInd**: Legend
-  * **HSBC**: Live+ Cashback
-  * **IDFC FIRST**: Wealth
-* **Benefit Auto-Fill**: Automatically pre-fills reward point multipliers, annual fee waiver thresholds, point-to-INR conversion rates, and 24/7 bank customer service helplines.
+### 1. Expanded Bank & Card Catalog (44 Verified Cards: 29 Credit + 15 Debit)
+* **Complete Offline Catalog**: 44 popular Indian credit and debit cards across Visa, Mastercard, RuPay, Diners Club, American Express, and JCB:
+  * **Credit Cards (29)**:
+    * **HDFC Bank**: Infinia Metal, Diners Club Black (Metal Edition), Regalia Gold, Millennia, Tata Neu Infinity RuPay, Swiggy (Orange Edition), Swiggy (Black Edition)
+    * **SBI Card**: Cashback Card, PRIME, Elite
+    * **Axis Bank**: Atlas, Magnus Burgundy, Airtel Axis, Flipkart Axis, Axis Neo, Axis My Zone, Axis Privilege (American Express Edition)
+    * **ICICI Bank**: Amazon Pay, Sapphiro World, Emeralde Private Metal, Rubyx Mastercard, Rubyx Amex, Coral
+    * **Kotak Mahindra**: White Reserve, Zen Signature, AIR+
+    * **IndusInd Bank**: Legend, Pinnacle Visa Signature
+    * **HSBC Bank**: Live+ Cashback, HSBC Platinum (`hdbc-platinum`)
+    * **Federal Bank**: Scapia Federal Travel Card (Zero Forex)
+    * **Yes Bank**: ELITE+ Credit Card
+    * **American Express**: Platinum Travel, The Platinum Card
+    * **IDFC FIRST Bank**: Wealth
+    * **RBL Bank**: World Safari
+    * **AU Small Finance Bank**: Zenith+
+  * **Debit Cards (15)**:
+    * **SBI**: SBI Platinum International Debit, SBI RuPay Select Wealth Debit, SBI Global RuPay JCB Debit, SBI Nari Shakti RuPay Debit, SBI Business Platinum Debit
+    * **HDFC Bank**: EasyShop Platinum Debit Card
+    * **Kotak Mahindra**: Kotak 811+ Debit Card
+    * **IndusInd Bank**: IndusInd Select Visa Signature Debit, IndusInd INDIE Visa Signature Debit
+    * **Canara Bank**: Canara RuPay Select Debit Card
+    * **ICICI Bank**: ICICI Coral Debit Card, ICICI Sapphiro Debit Card
+    * **Axis Bank**: Axis Priority Debit Card, Axis Burgundy Debit Card
+    * **HDFC Bank**: HDFC Millennia Debit Card
+* **Interactive Template Picker**: Filter by `All (44)`, `Credit (29)`, or `Debit (15)`, with live instant search and bank filter dropdown (HDFC, SBI, Axis, ICICI, Kotak, IndusInd, Canara, Federal, HSBC, Yes Bank, Amex, etc.).
+* **1-Tap Auto-Fill**: Auto-populates card type (Credit/Debit), network, domestic/international lounge quotas, spend qualifier rules, fee waiver targets, and 24/7 bank customer care helplines.
 
 ### 2. Airport Lounge Spend & Access Tracker
 * **Quota Counters**: Domestic and International lounge access visit trackers with remaining visit indicators.
-* **Minimum Spend Requirement Tracking**: Explicitly tracks cards requiring qualifying quarterly or monthly spends (e.g. ₹50,000/quarter on Regalia Gold, ₹10,000/month on ICICI Sapphiro, ₹50,000 in 3 months on Airtel Axis) vs. unconditional access (e.g. Infinia, Amex Platinum).
+* **Granular Spend Qualification Windows**: Explicitly tracks cards based on modern bank qualification policies:
+  * **Unconditional Access (Free)**: HDFC Infinia Metal, HDFC Diners Club Black Metal, Axis Atlas, Amex Platinum.
+  * **Previous Quarter Qualifier**: HDFC Millennia (₹1,00,000/qtr), Tata Neu Infinity (₹50,000/qtr), HDFC EasyShop Platinum Debit (₹5,000/qtr), Canara RuPay Select Debit (₹5,000/qtr), IndusInd Select Debit (₹5,000/qtr).
+  * **Previous Calendar Month Qualifier**: Federal Scapia (₹10,000/month), ICICI Rubyx Mastercard & Amex (₹10,000/month).
+  * **Previous 3 Months Qualifier**: Axis Flipkart (₹50,000/3mo), Axis My Zone (₹50,000/3mo).
 * **Live Progress Bar**: Visual `₹ achieved / ₹ required` progress bar with instant status indicators (**Unlocked & Ready** vs. **Spend Target Required**).
 * **Interactive Spend Logging**: 1-tap "+ Log Qualifying Spend" action to increment your qualifying spend toward unlocking lounge access.
 * **Reset Period Countdown**: Automatic reset tracking for Quarter (Q1–Q4) and Annual cycles.
 
 ### 3. Subscription & Recurring Payment Detection
-* **Automatic Spend Scanner**: Built-in on-device scanner that detects recurring payments from bank alerts, SMS text, or spend logs (Netflix, Spotify, Apple, Google One, AWS, ChatGPT Plus, YouTube Premium, Swiggy One, Cult.fit, Microsoft 365, etc.).
+* **Automatic Spend Scanner**: Built-in on-device scanner that detects recurring payments from bank alerts, SMS text, or spend logs (Netflix, Spotify, Apple iCloud+, Google One, AWS, ChatGPT Plus, YouTube Premium, Swiggy One, Cult.fit, Microsoft 365, etc.).
 * **Commitment Overview**: Computes monthly and annual recurring financial commitments at a glance.
 * **Renewal Countdowns**: Days-to-renew alerts highlighting services renewing within 7 days.
 * **Cancellation Hub**: Direct portal links to merchant cancellation dashboards and 1-tap active/paused toggle.
