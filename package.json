@@ -5,16 +5,24 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
-    "build": "vite build",
+    "build": "vite build && mkdir -p www && cp -r dist/* www/ && npx cap copy android 2>/dev/null || true",
     "preview": "vite preview",
     "clean": "rm -rf dist server.js",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "sync": "npx cap sync android"
   },
   "dependencies": {
+    "@aparajita/capacitor-secure-storage": "^8.0.1",
+    "@capacitor-mlkit/document-scanner": "^8.2.2",
     "@capacitor/android": "^8.6.0",
+    "@capacitor/app": "^8.0.0",
     "@capacitor/cli": "^8.6.0",
     "@capacitor/core": "^8.6.0",
+    "@capacitor/filesystem": "^8.1.5",
+    "@capacitor/local-notifications": "^8.3.1",
+    "@capacitor/share": "^8.0.3",
     "@google/genai": "^2.4.0",
+    "@pantrist/capacitor-plugin-ml-kit-text-recognition": "^8.1.1",
     "@tailwindcss/vite": "^4.3.3",
     "@vitejs/plugin-react": "^6.1.1",
     "dotenv": "^17.2.3",
