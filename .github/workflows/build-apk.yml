@@ -25,10 +25,12 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Accept Android SDK Licenses
+        run: |
+          # Use pre-installed Android SDK on ubuntu-latest runner
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses || true
 
-      - name: Install Dependencies
+      - name: Install Project Dependencies
         run: npm install --legacy-peer-deps
 
       - name: Build Web Production Bundle
