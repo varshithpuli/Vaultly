@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Vaultly</string>
+    <string name="title_activity_main">Vaultly</string>
+    <string name="package_name">com.vaultly.app</string>
+    <string name="custom_url_scheme">com.vaultly.app</string>
+</resources>

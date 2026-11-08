@@ -1,0 +1,11 @@
+{
+	"appId": "com.vaultly.app",
+	"appName": "Vaultly",
+	"webDir": "dist",
+	"bundledWebRuntime": false,
+	"android": {
+		"allowMixedContent": false,
+		"captureInput": true,
+		"webContentsDebuggingEnabled": false
+	}
+}
